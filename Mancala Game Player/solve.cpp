@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <iostream>
 #include <map>
 #include <numeric>
@@ -10,13 +11,14 @@ using namespace std;
 
 int explored = 0, pruned = 0;
 double time_limit_1, time_limit_2;
-const long long INF = 2e17;
+const double INF = 2e17;
 clock_t timer;
 map<pair<int, int>, int> m{{{7, 13}, 0},
                            {{14, 19}, 14},
                            {{20, 26}, 13},
                            {{27, 32}, 27},
                            {{33, 39}, 26}};
+bool reorder = false;
 
 struct MancalaNode {
  private:
@@ -41,7 +43,6 @@ struct MancalaNode {
   }
 
   void reorder_moves(vector<int>& moves) {
-    // random_shuffle(moves.begin(), moves.end());
     set<int> s;
     for (int i = 0; i < moves.size(); i++) {
       s.insert(moves[i]);
@@ -61,31 +62,38 @@ struct MancalaNode {
     }
 
     // if any move captures stones, prioritize the one that captures the most
-    vector<pair<int, int>> capture_moves;
+    vector<pair<int, int>> temp;
     for (int i = sz - 1; i >= 0; i--) {
       if (s.count(moves[i]) == 0) continue;
       int final = final_bin(moves[i], p1Turn);
       if (p1Turn) {
         if (final < 6 && p[final] == 0 && p[12 - final] > 0) {
-          capture_moves.push_back(make_pair(p[12 - final], moves[i]));
+          temp.push_back(make_pair(p[12 - final], moves[i]));
           s.erase(moves[i]);
         }
       } else {
         if (final >= 7 && final <= 12 && p[final] == 0 && p[12 - final] > 0) {
-          capture_moves.push_back(make_pair(p[12 - final], moves[i]));
+          temp.push_back(make_pair(p[12 - final], moves[i]));
           s.erase(moves[i]);
         }
       }
     }
 
-    sort(capture_moves.rbegin(), capture_moves.rend());
-    for (int i = 0; i < capture_moves.size(); i++) {
-      new_moves.push_back(capture_moves[i].second);
+    sort(temp.rbegin(), temp.rend());
+    for (int i = 0; i < temp.size(); i++) {
+      new_moves.push_back(temp[i].second);
     }
 
-    // rest just in order, closest from my storage
+    temp.clear();
+
+    // rest just in ascending order of gems
     for (auto it = s.begin(); it != s.end(); it++) {
-      new_moves.push_back(*it);
+      temp.push_back(make_pair(p[*it], *it));
+    }
+
+    sort(temp.begin(), temp.end());
+    for (int i = 0; i < temp.size(); i++) {
+      new_moves.push_back(temp[i].second);
     }
 
     moves = new_moves;
@@ -111,7 +119,8 @@ struct MancalaNode {
       if (p[i] > 0) moves.push_back(i);
     }
 
-    reorder_moves(moves);
+    random_shuffle(moves.begin(), moves.end());
+    if (reorder) reorder_moves(moves);
 
     return moves;
   }
@@ -184,76 +193,67 @@ struct MancalaNode {
     }
   }
 
-  long long evaluate(int heuristic_idx) {
-    if (is_game_over()) {
+  double evaluate(int heuristic_idx, int depth) {
+    if (heuristic_idx == -1) {
+      // game over
       int p1_score, p2_score;
       tie(p1_score, p2_score) = compute_final_score();
       if (p1_score == p2_score)
         return 0;
       else
         return 1000000000LL * (p1_score - p2_score);
+    } else if (heuristic_idx == -2) {
+      // not over on paper, but effectively over
+      if (p[6] > 24) return 1000000000LL * (2 * p[6] - 48);
+      if (p[13] > 24) return -1000000000LL * (2 * p[13] - 48);
     }
 
-    // game effectively over
-    if (p[6] > 24) return 1000000000LL * (2 * p[6] - 48);
-    if (p[13] > 24) return -1000000000LL * (2 * p[13] - 48);
+    // cerr << "Depth: " << depth << endl;
+    assert(p1Turn);
+    assert(p[6] <= 24 && p[13] <= 24);
 
-    if (heuristic_idx == 1) {
-      // stones in my storage - stones in opponent's storage
-      return p[6] - p[13];
-    } else if (heuristic_idx == 2) {
-      // W1 * (stones_in_my_storage – stones_in_opponents_storage) +
-      // W2 * (stones_on_my_side – stones_on_opponents_side)
-      int stones_in_my_storage = p[6];
-      int stones_in_opponents_storage = p[13];
-      int stones_on_my_side = 0;
-      int stones_on_opponents_side = 0;
-      for (int i = 0; i < 6; i++) {
-        stones_on_my_side += p[i];
-        stones_on_opponents_side += p[i + 7];
+    if (heuristic_idx == 3) {
+      const double my_store_weight = 1.0, chain_weight = 0.9,
+                   opp_store_weight = -0.7, me_close_to_winning = 0.2,
+                   opp_close_to_winning = -0.25, my_side_gems_weight = 0.15,
+                   number_of_moves_weight = 0.4, capture_weight = 0.5;
+      double score = 0;
+      int loop_start = 0, loop_end = 6;
+
+      int my_side_gems = accumulate(p.begin(), p.begin() + 6, 0);
+      int opp_side_gems = accumulate(p.begin() + 7, p.begin() + 13, 0);
+
+      score += my_side_gems_weight * my_side_gems;
+      score += my_store_weight * p[6];
+      score += opp_store_weight * p[13];
+      score += me_close_to_winning * (1 / (25 - p[6]));
+      score += opp_close_to_winning * (1 / (25 - p[13]));
+
+      int non_empty_pits = 0;
+      for (int i = loop_start; i < loop_end; i++) {
+        if (p[i] > 0) non_empty_pits++;
       }
-      return 2 * (stones_in_my_storage - stones_in_opponents_storage) +
-             (stones_on_my_side - stones_on_opponents_side);
-    } else if (heuristic_idx == 3) {
-      long long score = 0;
-      score += 45 * (p[6] - p[13]);  // difference between mancalas
 
-      // count capturing opportunities
-      int cap1 = 0, cap2 = 0;
-      for (int i = 0; i < 6; i++) {
+      score += number_of_moves_weight * non_empty_pits;
+
+      int closest_chain_chance = -1, capture_opportunities = 0;
+      for (int i = loop_start; i < loop_end; i++) {
         if (p[i] == 0) continue;
         int final = final_bin(i, true);
-        if (final < 6 && p[final] == 0 && p[12 - final])
-          cap1 += p[12 - final] + 1;
-      }
-      for (int i = 7; i < 13; i++) {
-        if (p[i] == 0) continue;
-        int final = final_bin(i, false);
-        if (final > 6 && final <= 12 && p[final] == 0 && p[12 - final])
-          cap2 += p[12 - final] + 1;
-      }
-      if (p1Turn) {
-        score += 5 * cap1;
-        score -= 10 * cap2;
-      } else {
-        score += 5 * cap2;
-        score -= 10 * cap1;
+        if (final == 6)
+          closest_chain_chance =
+              max(closest_chain_chance,
+                  i);  // the closer to my pit, the better since it might not
+                       // disrupt previous pits for subsqeuent chaining
+        if (final < 6 && p[final] == 0 && p[12 - final] > 0)
+          capture_opportunities = max(capture_opportunities, p[12 - final]);
       }
 
-      // count chaining opportunities
-      int chain1 = 0, chain2 = 0;
-      for (int i = 0; i < 6; i++) {
-        if (p[i] && final_bin(i, true) == 6) chain1++;
-      }
-      for (int i = 7; i < 13; i++) {
-        if (p[i] && final_bin(i, false)) chain2++;
-      }
-      // score += 10 * chain1 - 20 * chain2;
-      if (p1Turn)
-        score += 10 * chain1;
-      else
-        score += 10 * chain2;
+      if (closest_chain_chance != -1)
+        score += chain_weight * sqrt(closest_chain_chance);
+      score += capture_weight * capture_opportunities;
 
+      // cerr << "Score: " << score << endl;
       return score;
 
     } else
@@ -293,35 +293,46 @@ struct MancalaNode {
   }
 };
 
-long long minimax(MancalaNode node, int depth, long long alpha, long long beta,
-                  bool repeat_move) {
+double minimax(MancalaNode node, int depth, double alpha, double beta,
+               bool repeat_move) {
   explored++;
 
-  if (node.is_game_over() || node.p[6] > 24 || node.p[13] > 24 ||
-      (!repeat_move && depth >= 6 &&
-       clock() - timer > time_limit_1 * CLOCKS_PER_SEC)) {
+  if (node.is_game_over())
+    return node.evaluate(-1, depth);
+  else if (node.p[6] > 24 || node.p[13] > 24)
+    return node.evaluate(-2, depth);
+  if (!repeat_move && node.p1Turn && depth >= 6 &&
+      clock() - timer > time_limit_1 * CLOCKS_PER_SEC) {
     // cerr << "TLE at depth " << depth << endl;
-    return node.evaluate(3);
+    return node.evaluate(3, depth);
   }
 
   vector<int> moves = node.get_next_moves();
 
   if (node.p1Turn) {
-    long long best = -INF;
+    double best = -INF;
     int i = 0;
 
     for (int next_move : moves) {
       i++;
       MancalaNode next_node = node;
       bool another_turn = next_node.execute_move(next_move);
+
+      double score;
+
       if (another_turn) {
-        best = max(best, minimax(next_node, depth, alpha, beta, true));
+        score = minimax(next_node, depth, alpha, beta, true);
       } else {
         next_node.p1Turn = !next_node.p1Turn;
-        best = max(best, minimax(next_node, depth + 1, alpha, beta, false));
+        score = minimax(next_node, depth + 1, alpha, beta, false);
       }
 
+      // cerr << "Depth " << depth << " Move " << i << " Score " << score <<
+      // "\n";
+
+      best = max(best, score);
       alpha = max(alpha, best);
+
       if (alpha >= beta) {
         // cerr << "Pruned " << moves.size() - i << " moves\n";
         pruned += moves.size() - i;
@@ -333,7 +344,7 @@ long long minimax(MancalaNode node, int depth, long long alpha, long long beta,
   }
 
   else {
-    long long best = INF;
+    double best = INF;
     int i = 0;
 
     for (int next_move : moves) {
@@ -341,14 +352,21 @@ long long minimax(MancalaNode node, int depth, long long alpha, long long beta,
       MancalaNode next_node = node;
       bool another_turn = next_node.execute_move(next_move);
 
+      double score;
+
       if (another_turn) {
-        best = min(best, minimax(next_node, depth, alpha, beta, true));
+        score = minimax(next_node, depth, alpha, beta, true);
       } else {
         next_node.p1Turn = !next_node.p1Turn;
-        best = min(best, minimax(next_node, depth + 1, alpha, beta, false));
+        score = minimax(next_node, depth + 1, alpha, beta, false);
       }
 
+      // cerr << "Depth " << depth << " Move " << i << " Score " << score <<
+      // "\n";
+
+      best = min(best, score);
       beta = min(beta, best);
+
       if (alpha >= beta) {
         // cerr << "Pruned " << moves.size() - i << " moves\n";
         pruned += moves.size() - i;
@@ -378,16 +396,23 @@ bool call_my_turn(MancalaNode& node) {
 
 bool call_ai_turn(MancalaNode& node) {
   int best_move = -1;
-  long long best_score = -INF;
+  double best_score = -INF;
   if (!node.p1Turn) {
     best_score = 1000000;
   }
   vector<int> moves = node.get_next_moves();
+
+  cerr << "P" << (node.p1Turn ? 1 : 2) << " moves: ";
+  for (int move : moves) {
+    cerr << move + 1 << " ";
+  }
+  cerr << endl;
+
   time_limit_1 = 4.5 / moves.size();
   for (int next_move : moves) {
     MancalaNode next_node = node;
     bool another_turn = next_node.execute_move(next_move);
-    long long score;
+    double score;
     // start a timer
     timer = clock();
     if (another_turn) {
@@ -395,6 +420,9 @@ bool call_ai_turn(MancalaNode& node) {
     } else {
       score = minimax(next_node, 1, -INF, INF, false);
     }
+
+    cerr << "Move " << next_move + 1 << ", Score: " << score << endl;
+
     if (node.p1Turn) {
       if (score > best_score) {
         best_score = score;
@@ -413,9 +441,15 @@ bool call_ai_turn(MancalaNode& node) {
   return node.execute_move(best_move);
 }
 
-int main() {
+int main(int argc, char** argv) {
   MancalaNode node;
   cout << node << endl;
+
+  if (argc > 1) {
+    for (int i = 1; i < argc; i++) {
+      if (string(argv[i]) == "r") reorder = true;
+    }
+  }
 
   bool my_turn = false;
 
