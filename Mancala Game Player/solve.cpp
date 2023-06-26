@@ -1,5 +1,6 @@
 #include <cassert>
 #include <iostream>
+#include <numeric>
 #include <vector>
 using namespace std;
 
@@ -88,11 +89,20 @@ struct MancalaNode {
 
   long long evaluate(int heuristic_idx) {
     if (is_game_over()) {
-      if (p[6] != p[13])
+      int p1_score = accumulate(p.begin(), p.begin() + 6, 0);
+      int p2_score = accumulate(p.begin() + 7, p.begin() + 13, 0);
+      if (p1_score == 0) {
+        return -1000000000LL * (48 - 2 * p[6]);
+      } else if (p2_score == 0) {
         return 1000000000LL * (48 - 2 * p[13]);
-      else
+      } else
         return 0;
     }
+
+    // game effectively over
+    if (p[6] > 24) return 1000000000LL * (2 * p[6] - 48);
+    if (p[13] > 24) return -1000000000LL * (2 * p[13] - 48);
+
     if (heuristic_idx == 1) {
       // stones in my storage - stones in opponent's storage
       return p[6] - p[13];
@@ -117,18 +127,18 @@ struct MancalaNode {
       int cap1 = 0, cap2 = 0;
       for (int i = 0; i < 6; i++) {
         if (p[i] && i + p[i] < 6 && p[i + p[i]] == 0 && p[12 - i - p[i]])
-          cap1 = max(cap1, p[12 - i - p[i]]);
+          cap1 += p[12 - i - p[i]] + 1;
       }
       for (int i = 7; i < 13; i++) {
         if (p[i] && i + p[i] < 13 && p[i + p[i]] == 0 && p[12 - i - p[i]])
-          cap2 = max(cap2, p[12 - i - p[i]]);
+          cap2 += p[12 - i - p[i]] + 1;
       }
       if (p1Turn) {
-        score += 5 * cap1;
-        score -= 10 * cap2;
+        score += 10 * cap1;
+        score -= 20 * cap2;
       } else {
-        score += 5 * cap2;
-        score -= 10 * cap1;
+        score += 10 * cap2;
+        score -= 20 * cap1;
       }
 
       // count chaining opportunities
@@ -139,7 +149,7 @@ struct MancalaNode {
       for (int i = 7; i < 13; i++) {
         if (p[i] && i + p[i] == 13) chain2++;
       }
-      score += 10 * (chain1 - chain2);
+      score += 10 * chain1 - 20 * chain2;
 
       return score;
 
@@ -273,9 +283,9 @@ bool call_ai_turn(MancalaNode& node) {
     best_score = 1000000;
   }
   vector<int> moves = node.get_next_moves();
-  cerr << "Moves: ";
-  for (int i : moves) cerr << i << " ";
-  cerr << endl;
+  // cerr << "Moves: ";
+  // for (int i : moves) cerr << i << " ";
+  // cerr << endl;
   time_limit_1 = 4.5 / moves.size();
   for (int next_move : moves) {
     MancalaNode next_node = node;
@@ -327,6 +337,8 @@ int main() {
       cout << "Another turn for player " << (node.p1Turn ? "1" : "2") << endl;
     }
   }
+
+  cout << "Game over!\n";
 
   return 0;
 }
