@@ -1,7 +1,9 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <map>
 #include <numeric>
+#include <set>
 #include <tuple>
 #include <vector>
 using namespace std;
@@ -10,8 +12,87 @@ int explored = 0, pruned = 0;
 double time_limit_1, time_limit_2;
 const long long INF = 2e17;
 clock_t timer;
+map<pair<int, int>, int> m{{{7, 13}, 0},
+                           {{14, 19}, 14},
+                           {{20, 26}, 13},
+                           {{27, 32}, 27},
+                           {{33, 39}, 26}};
 
 struct MancalaNode {
+ private:
+  inline int final_bin(int move_idx, bool turn1) {
+    int res = -1;
+    int tot = move_idx + p[move_idx];
+    if (turn1) {
+      res = tot % 13;
+    } else {
+      for (auto it = m.begin(); it != m.end(); it++) {
+        if (it->first.first <= tot && tot <= it->first.second) {
+          res = tot - it->second;
+          break;
+        }
+      }
+    }
+    // cerr << move_idx << " " << p[move_idx] << " " << (turn1 ? "true" :
+    // "false")
+    //      << " " << res << endl;
+    assert(res != -1);
+    return res;
+  }
+
+  void reorder_moves(vector<int>& moves) {
+    // random_shuffle(moves.begin(), moves.end());
+    set<int> s;
+    for (int i = 0; i < moves.size(); i++) {
+      s.insert(moves[i]);
+    }
+
+    // if any move awards another turn, put it at the front
+    // if there are multiple ones, prioritize the one closest to the storage
+
+    vector<int> new_moves;
+    const int sz = moves.size();
+
+    for (int i = sz - 1; i >= 0; i--) {
+      if (final_bin(moves[i], p1Turn) == 6) {
+        new_moves.push_back(moves[i]);
+        s.erase(moves[i]);
+      }
+    }
+
+    // if any move captures stones, prioritize the one that captures the most
+    vector<pair<int, int>> capture_moves;
+    for (int i = sz - 1; i >= 0; i--) {
+      if (s.count(moves[i]) == 0) continue;
+      int final = final_bin(moves[i], p1Turn);
+      if (p1Turn) {
+        if (final < 6 && p[final] == 0 && p[12 - final] > 0) {
+          capture_moves.push_back(make_pair(p[12 - final], moves[i]));
+          s.erase(moves[i]);
+        }
+      } else {
+        if (final >= 7 && final <= 12 && p[final] == 0 && p[12 - final] > 0) {
+          capture_moves.push_back(make_pair(p[12 - final], moves[i]));
+          s.erase(moves[i]);
+        }
+      }
+    }
+
+    sort(capture_moves.rbegin(), capture_moves.rend());
+    for (int i = 0; i < capture_moves.size(); i++) {
+      new_moves.push_back(capture_moves[i].second);
+    }
+
+    // rest just in order, closest from my storage
+    for (auto it = s.begin(); it != s.end(); it++) {
+      new_moves.push_back(*it);
+    }
+
+    moves = new_moves;
+
+    // cerr << "Done reordering moves" << endl;
+  }
+
  public:
   vector<int> p;  // 0 to 5 are player 1's pits, 6 is player 1's storage bin,
                   // 7 to 12 are player 2's pits, 13 is player 2's storage bin
@@ -19,8 +100,7 @@ struct MancalaNode {
 
   MancalaNode() {
     p.assign(14, 4);  // 7th index is storage bin
-    p[6] = 0;
-    p[13] = 0;
+    p[6] = p[13] = 0;
     p1Turn = true;
   }
 
@@ -31,8 +111,7 @@ struct MancalaNode {
       if (p[i] > 0) moves.push_back(i);
     }
 
-    // reorganize the moves randomly
-    random_shuffle(moves.begin(), moves.end());
+    reorder_moves(moves);
 
     return moves;
   }
@@ -58,8 +137,8 @@ struct MancalaNode {
   bool execute_move(int idx) {
     // cerr << "Move for " << (p1Turn ? "player 1" : "player 2") << ": " << idx
     //      << endl;
-    assert(idx >= 0 && idx < 14 && p[idx] > 0);
-    assert(p1Turn ? idx < 6 : (idx > 6 && idx < 13));
+    assert(idx >= 0 && idx != 6 && idx < 13 && p[idx] > 0);
+    assert(p1Turn ? idx < 6 : idx > 6);
 
     // will return if another move will be awarded to this player
 
@@ -142,12 +221,16 @@ struct MancalaNode {
       // count capturing opportunities
       int cap1 = 0, cap2 = 0;
       for (int i = 0; i < 6; i++) {
-        if (p[i] && i + p[i] < 6 && p[i + p[i]] == 0 && p[12 - i - p[i]])
-          cap1 += p[12 - i - p[i]] + 1;
+        if (p[i] == 0) continue;
+        int final = final_bin(i, true);
+        if (final < 6 && p[final] == 0 && p[12 - final])
+          cap1 += p[12 - final] + 1;
       }
       for (int i = 7; i < 13; i++) {
-        if (p[i] && i + p[i] < 13 && p[i + p[i]] == 0 && p[12 - i - p[i]])
-          cap2 += p[12 - i - p[i]] + 1;
+        if (p[i] == 0) continue;
+        int final = final_bin(i, false);
+        if (final > 6 && final <= 12 && p[final] == 0 && p[12 - final])
+          cap2 += p[12 - final] + 1;
       }
       if (p1Turn) {
         score += 5 * cap1;
@@ -160,10 +243,10 @@ struct MancalaNode {
       // count chaining opportunities
       int chain1 = 0, chain2 = 0;
       for (int i = 0; i < 6; i++) {
-        if (p[i] && i + p[i] == 6) chain1++;
+        if (p[i] && final_bin(i, true) == 6) chain1++;
       }
       for (int i = 7; i < 13; i++) {
-        if (p[i] && i + p[i] == 13) chain2++;
+        if (p[i] && final_bin(i, false)) chain2++;
       }
       // score += 10 * chain1 - 20 * chain2;
       if (p1Turn)
@@ -211,14 +294,12 @@ struct MancalaNode {
 };
 
 long long minimax(MancalaNode node, int depth, long long alpha, long long beta,
-                  bool first_call) {
+                  bool repeat_move) {
   explored++;
-  // if (explored % 100000 == 0) cerr << "Explored: " << explored << endl;
-  // cerr << "Depth: " << depth
-  //      << " Turn: " << (node.p1Turn ? "player 1" : "player 2") << endl;
 
-  if (node.is_game_over() ||
-      clock() - timer > time_limit_1 * CLOCKS_PER_SEC && depth >= 6) {
+  if (node.is_game_over() || node.p[6] > 24 || node.p[13] > 24 ||
+      (!repeat_move && depth >= 6 &&
+       clock() - timer > time_limit_1 * CLOCKS_PER_SEC)) {
     // cerr << "TLE at depth " << depth << endl;
     return node.evaluate(3);
   }
@@ -233,12 +314,8 @@ long long minimax(MancalaNode node, int depth, long long alpha, long long beta,
       i++;
       MancalaNode next_node = node;
       bool another_turn = next_node.execute_move(next_move);
-      // if (first_call) {
-      //   timer = clock();
-      //   time_limit_2 = time_limit_1 / moves.size();
-      // }
       if (another_turn) {
-        best = max(best, minimax(next_node, depth, alpha, beta, false));
+        best = max(best, minimax(next_node, depth, alpha, beta, true));
       } else {
         next_node.p1Turn = !next_node.p1Turn;
         best = max(best, minimax(next_node, depth + 1, alpha, beta, false));
@@ -265,7 +342,7 @@ long long minimax(MancalaNode node, int depth, long long alpha, long long beta,
       bool another_turn = next_node.execute_move(next_move);
 
       if (another_turn) {
-        best = min(best, minimax(next_node, depth, alpha, beta, false));
+        best = min(best, minimax(next_node, depth, alpha, beta, true));
       } else {
         next_node.p1Turn = !next_node.p1Turn;
         best = min(best, minimax(next_node, depth + 1, alpha, beta, false));
@@ -306,9 +383,6 @@ bool call_ai_turn(MancalaNode& node) {
     best_score = 1000000;
   }
   vector<int> moves = node.get_next_moves();
-  // cerr << "Moves: ";
-  // for (int i : moves) cerr << i << " ";
-  // cerr << endl;
   time_limit_1 = 4.5 / moves.size();
   for (int next_move : moves) {
     MancalaNode next_node = node;
@@ -317,9 +391,9 @@ bool call_ai_turn(MancalaNode& node) {
     // start a timer
     timer = clock();
     if (another_turn) {
-      score = minimax(next_node, 0, -INF, INF, true);
+      score = minimax(next_node, 0, -INF, INF, false);
     } else {
-      score = minimax(next_node, 1, -INF, INF, true);
+      score = minimax(next_node, 1, -INF, INF, false);
     }
     if (node.p1Turn) {
       if (score > best_score) {
