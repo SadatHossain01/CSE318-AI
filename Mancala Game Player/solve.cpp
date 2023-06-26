@@ -1,10 +1,12 @@
+#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <numeric>
+#include <tuple>
 #include <vector>
 using namespace std;
 
-int explored = 0;
+int explored = 0, pruned = 0;
 double time_limit_1, time_limit_2;
 const long long INF = 2e17;
 clock_t timer;
@@ -28,10 +30,10 @@ struct MancalaNode {
     for (int i = start; i < start + 6; i++) {
       if (p[i] > 0) moves.push_back(i);
     }
-    // cerr << "Possible moves for " << (p1Turn ? "player 1" : "player 2") << ":
-    // "; for (int move : moves) {
-    //   cerr << move << " ";
-    // }
+
+    // reorganize the moves randomly
+    random_shuffle(moves.begin(), moves.end());
+
     return moves;
   }
 
@@ -43,6 +45,14 @@ struct MancalaNode {
       if (p[i + 7] > 0) p2Empty = false;
     }
     return p1Empty || p2Empty;
+  }
+
+  pair<int, int> compute_final_score() {
+    int p1_score = accumulate(p.begin(), p.begin() + 6, 0);
+    int p2_score = accumulate(p.begin() + 7, p.begin() + 13, 0);
+    p1_score += p[6];
+    p2_score += p[13];
+    return make_pair(p1_score, p2_score);
   }
 
   bool execute_move(int idx) {
@@ -57,6 +67,14 @@ struct MancalaNode {
     p[idx] = 0;
     int i = idx + 1;
     while (stones > 0) {
+      if (p1Turn && i == 13) {
+        i = 0;
+        continue;
+      }
+      if (!p1Turn && i == 6) {
+        i++;
+        continue;
+      }
       p[i]++;
       stones--;
       i++;
@@ -89,14 +107,12 @@ struct MancalaNode {
 
   long long evaluate(int heuristic_idx) {
     if (is_game_over()) {
-      int p1_score = accumulate(p.begin(), p.begin() + 6, 0);
-      int p2_score = accumulate(p.begin() + 7, p.begin() + 13, 0);
-      if (p1_score == 0) {
-        return -1000000000LL * (48 - 2 * p[6]);
-      } else if (p2_score == 0) {
-        return 1000000000LL * (48 - 2 * p[13]);
-      } else
+      int p1_score, p2_score;
+      tie(p1_score, p2_score) = compute_final_score();
+      if (p1_score == p2_score)
         return 0;
+      else
+        return 1000000000LL * (p1_score - p2_score);
     }
 
     // game effectively over
@@ -134,11 +150,11 @@ struct MancalaNode {
           cap2 += p[12 - i - p[i]] + 1;
       }
       if (p1Turn) {
-        score += 10 * cap1;
-        score -= 20 * cap2;
+        score += 5 * cap1;
+        score -= 10 * cap2;
       } else {
-        score += 10 * cap2;
-        score -= 20 * cap1;
+        score += 5 * cap2;
+        score -= 10 * cap1;
       }
 
       // count chaining opportunities
@@ -149,7 +165,11 @@ struct MancalaNode {
       for (int i = 7; i < 13; i++) {
         if (p[i] && i + p[i] == 13) chain2++;
       }
-      score += 10 * chain1 - 20 * chain2;
+      // score += 10 * chain1 - 20 * chain2;
+      if (p1Turn)
+        score += 10 * chain1;
+      else
+        score += 10 * chain2;
 
       return score;
 
@@ -198,12 +218,14 @@ long long minimax(MancalaNode node, int depth, long long alpha, long long beta,
   //      << " Turn: " << (node.p1Turn ? "player 1" : "player 2") << endl;
 
   if (node.is_game_over() ||
-      clock() - timer > time_limit_2 * CLOCKS_PER_SEC && depth >= 7) {
+      clock() - timer > time_limit_1 * CLOCKS_PER_SEC && depth >= 6) {
+    // cerr << "TLE at depth " << depth << endl;
     return node.evaluate(3);
   }
 
+  vector<int> moves = node.get_next_moves();
+
   if (node.p1Turn) {
-    vector<int> moves = node.get_next_moves();
     long long best = -INF;
     int i = 0;
 
@@ -211,10 +233,10 @@ long long minimax(MancalaNode node, int depth, long long alpha, long long beta,
       i++;
       MancalaNode next_node = node;
       bool another_turn = next_node.execute_move(next_move);
-      if (first_call) {
-        timer = clock();
-        time_limit_2 = time_limit_1 / moves.size();
-      }
+      // if (first_call) {
+      //   timer = clock();
+      //   time_limit_2 = time_limit_1 / moves.size();
+      // }
       if (another_turn) {
         best = max(best, minimax(next_node, depth, alpha, beta, false));
       } else {
@@ -225,6 +247,7 @@ long long minimax(MancalaNode node, int depth, long long alpha, long long beta,
       alpha = max(alpha, best);
       if (alpha >= beta) {
         // cerr << "Pruned " << moves.size() - i << " moves\n";
+        pruned += moves.size() - i;
         break;
       }
     }
@@ -233,7 +256,6 @@ long long minimax(MancalaNode node, int depth, long long alpha, long long beta,
   }
 
   else {
-    vector<int> moves = node.get_next_moves();
     long long best = INF;
     int i = 0;
 
@@ -252,6 +274,7 @@ long long minimax(MancalaNode node, int depth, long long alpha, long long beta,
       beta = min(beta, best);
       if (alpha >= beta) {
         // cerr << "Pruned " << moves.size() - i << " moves\n";
+        pruned += moves.size() - i;
         break;
       }
     }
@@ -292,6 +315,7 @@ bool call_ai_turn(MancalaNode& node) {
     bool another_turn = next_node.execute_move(next_move);
     long long score;
     // start a timer
+    timer = clock();
     if (another_turn) {
       score = minimax(next_node, 0, -INF, INF, true);
     } else {
@@ -309,7 +333,7 @@ bool call_ai_turn(MancalaNode& node) {
       }
     }
   }
-  cerr << "Explored: " << explored << endl;
+  cerr << "Explored: " << explored << " Pruned: " << pruned << endl;
   cout << "Move for player " << (node.p1Turn ? "1" : "2") << ": "
        << best_move + 1 << endl;
   return node.execute_move(best_move);
@@ -323,6 +347,7 @@ int main() {
 
   while (!node.is_game_over()) {
     explored = 0;
+    pruned = 0;
     bool again = false;
     if (my_turn) {
       again = call_my_turn(node);
@@ -339,6 +364,16 @@ int main() {
   }
 
   cout << "Game over!\n";
+  pair<int, int> scores = node.compute_final_score();
+  cout << "Player 1: " << scores.first << endl;
+  cout << "Player 2: " << scores.second << endl;
+  if (scores.first > scores.second) {
+    cout << "Player 1 wins!\n";
+  } else if (scores.first < scores.second) {
+    cout << "Player 2 wins!\n";
+  } else {
+    cout << "It's a tie!\n";
+  }
 
   return 0;
 }
