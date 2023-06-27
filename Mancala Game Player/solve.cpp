@@ -22,26 +22,6 @@ bool reorder = false;
 
 struct MancalaNode {
  private:
-  inline int final_bin(int move_idx, bool turn1) {
-    int res = -1;
-    int tot = move_idx + p[move_idx];
-    if (turn1) {
-      res = tot % 13;
-    } else {
-      for (auto it = m.begin(); it != m.end(); it++) {
-        if (it->first.first <= tot && tot <= it->first.second) {
-          res = tot - it->second;
-          break;
-        }
-      }
-    }
-    // cerr << move_idx << " " << p[move_idx] << " " << (turn1 ? "true" :
-    // "false")
-    //      << " " << res << endl;
-    assert(res != -1);
-    return res;
-  }
-
   void reorder_moves(vector<int>& moves) {
     set<int> s;
     for (int i = 0; i < moves.size(); i++) {
@@ -110,6 +90,26 @@ struct MancalaNode {
     p.assign(14, 4);  // 7th index is storage bin
     p[6] = p[13] = 0;
     p1Turn = true;
+  }
+
+  inline int final_bin(int move_idx, bool turn1) {
+    int res = -1;
+    int tot = move_idx + p[move_idx];
+    if (turn1) {
+      res = tot % 13;
+    } else {
+      for (auto it = m.begin(); it != m.end(); it++) {
+        if (it->first.first <= tot && tot <= it->first.second) {
+          res = tot - it->second;
+          break;
+        }
+      }
+    }
+    // cerr << move_idx << " " << p[move_idx] << " " << (turn1 ? "true" :
+    // "false")
+    //      << " " << res << endl;
+    assert(res != -1);
+    return res;
   }
 
   vector<int> get_next_moves() {
@@ -316,9 +316,11 @@ double minimax(MancalaNode node, int depth, double alpha, double beta,
     for (int next_move : moves) {
       i++;
       MancalaNode next_node = node;
-      bool another_turn = next_node.execute_move(next_move);
-
       double score;
+      int final = node.final_bin(next_move, true);
+      if (final < 6 && next_node.p[final] == 0 && next_node.p[12 - final] > 0)
+        score += 5 * next_node.p[12 - final];
+      bool another_turn = next_node.execute_move(next_move);
 
       if (another_turn) {
         score = minimax(next_node, depth, alpha, beta, true);
@@ -350,9 +352,12 @@ double minimax(MancalaNode node, int depth, double alpha, double beta,
     for (int next_move : moves) {
       i++;
       MancalaNode next_node = node;
-      bool another_turn = next_node.execute_move(next_move);
-
       double score;
+      int final = node.final_bin(next_move, false);
+      if (final > 6 && final < 13 && next_node.p[final] == 0 &&
+          next_node.p[12 - final] > 0)
+        score -= 5 * next_node.p[12 - final];
+      bool another_turn = next_node.execute_move(next_move);
 
       if (another_turn) {
         score = minimax(next_node, depth, alpha, beta, true);
@@ -411,8 +416,20 @@ bool call_ai_turn(MancalaNode& node) {
   time_limit_1 = 4.5 / moves.size();
   for (int next_move : moves) {
     MancalaNode next_node = node;
-    bool another_turn = next_node.execute_move(next_move);
     double score;
+    int final = node.final_bin(next_move, node.p1Turn);
+    if (node.p1Turn) {
+      if (final < 6 && node.p[final] == 0 && node.p[12 - final] > 0) {
+        score += node.p[12 - final] * 5;
+      }
+    } else {
+      if (final > 6 && final < 13 && node.p[final] == 0 &&
+          node.p[12 - final] > 0) {
+        score -= node.p[12 - final] * 5;
+      }
+    }
+
+    bool another_turn = next_node.execute_move(next_move);
     // start a timer
     timer = clock();
     if (another_turn) {
