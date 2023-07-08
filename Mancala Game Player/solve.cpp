@@ -10,7 +10,7 @@
 using namespace std;
 
 int explored = 0, pruned = 0;
-double time_limit_1, time_limit_2;
+double time_limit;
 const double INF = 2e17;
 clock_t timer;
 map<pair<int, int>, int> m{{{7, 13}, 0},
@@ -18,81 +18,25 @@ map<pair<int, int>, int> m{{{7, 13}, 0},
                            {{20, 26}, 13},
                            {{27, 32}, 27},
                            {{33, 39}, 26}};
-bool reorder = false;
+enum GameMode { HUMAN_AI, AI_AI };
+GameMode cur_mode;
 
 struct MancalaNode {
- private:
-  void reorder_moves(vector<int>& moves) {
-    set<int> s;
-    for (int i = 0; i < moves.size(); i++) {
-      s.insert(moves[i]);
-    }
-
-    // if any move awards another turn, put it at the front
-    // if there are multiple ones, prioritize the one closest to the storage
-
-    vector<int> new_moves;
-    const int sz = moves.size();
-
-    for (int i = sz - 1; i >= 0; i--) {
-      if (final_bin(moves[i], p1Turn) == 6) {
-        new_moves.push_back(moves[i]);
-        s.erase(moves[i]);
-      }
-    }
-
-    // if any move captures stones, prioritize the one that captures the most
-    vector<pair<int, int>> temp;
-    for (int i = sz - 1; i >= 0; i--) {
-      if (s.count(moves[i]) == 0) continue;
-      int final = final_bin(moves[i], p1Turn);
-      if (p1Turn) {
-        if (final < 6 && p[final] == 0 && p[12 - final] > 0) {
-          temp.push_back(make_pair(p[12 - final], moves[i]));
-          s.erase(moves[i]);
-        }
-      } else {
-        if (final >= 7 && final <= 12 && p[final] == 0 && p[12 - final] > 0) {
-          temp.push_back(make_pair(p[12 - final], moves[i]));
-          s.erase(moves[i]);
-        }
-      }
-    }
-
-    sort(temp.rbegin(), temp.rend());
-    for (int i = 0; i < temp.size(); i++) {
-      new_moves.push_back(temp[i].second);
-    }
-
-    temp.clear();
-
-    // rest just in ascending order of gems
-    for (auto it = s.begin(); it != s.end(); it++) {
-      temp.push_back(make_pair(p[*it], *it));
-    }
-
-    sort(temp.begin(), temp.end());
-    for (int i = 0; i < temp.size(); i++) {
-      new_moves.push_back(temp[i].second);
-    }
-
-    moves = new_moves;
-
-    // cerr << "Done reordering moves" << endl;
-  }
-
  public:
   vector<int> p;  // 0 to 5 are player 1's pits, 6 is player 1's storage bin,
                   // 7 to 12 are player 2's pits, 13 is player 2's storage bin
   bool p1Turn;    // true if player 1's turn
+  int captured_gems, moves_won;
 
   MancalaNode() {
     p.assign(14, 4);  // 7th index is storage bin
     p[6] = p[13] = 0;
+    captured_gems = moves_won = 0;
     p1Turn = true;
   }
 
   inline int final_bin(int move_idx, bool turn1) {
+    // given the move, it will return the final bin index after the move
     int res = -1;
     int tot = move_idx + p[move_idx];
     if (turn1) {
@@ -105,9 +49,6 @@ struct MancalaNode {
         }
       }
     }
-    // cerr << move_idx << " " << p[move_idx] << " " << (turn1 ? "true" :
-    // "false")
-    //      << " " << res << endl;
     assert(res != -1);
     return res;
   }
@@ -120,7 +61,6 @@ struct MancalaNode {
     }
 
     random_shuffle(moves.begin(), moves.end());
-    if (reorder) reorder_moves(moves);
 
     return moves;
   }
@@ -145,11 +85,11 @@ struct MancalaNode {
 
   bool execute_move(int idx) {
     // cerr << "Move for " << (p1Turn ? "player 1" : "player 2") << ": " << idx
-    //      << endl;
+    // << endl;
     assert(idx >= 0 && idx != 6 && idx < 13 && p[idx] > 0);
     assert(p1Turn ? idx < 6 : idx > 6);
 
-    // will return if another move will be awarded to this player
+    // will return if a move is repeated
 
     int stones = p[idx];
     p[idx] = 0;
@@ -176,17 +116,22 @@ struct MancalaNode {
     if (p1Turn) {
       if (last <= 5 && p[last] == 1 && p[12 - last]) {
         p[6] += p[12 - last] + p[last];
+        captured_gems += p[12 - last] + p[last];
+        // cerr << "P1 captured " << p[12 - last] + p[last] << " gems" << endl;
         p[last] = p[12 - last] = 0;
       }
     } else {
       if (last >= 7 && last <= 12 && p[last] == 1 && p[12 - last]) {
         p[13] += p[12 - last] + p[last];
+        captured_gems -= p[12 - last] + p[last];
+        // cerr << "P2 captured " << p[12 - last] + p[last] << " gems" << endl;
         p[last] = p[12 - last] = 0;
       }
     }
 
     if ((p1Turn && last == 6) || (!p1Turn && last == 13)) {
       // give this player another turn
+      moves_won += (p1Turn ? 1 : -1);
       return true;
     } else {
       return false;
@@ -195,7 +140,7 @@ struct MancalaNode {
 
   double evaluate(int heuristic_idx, int depth) {
     if (heuristic_idx == -1) {
-      // game over
+      // game literally over
       int p1_score, p2_score;
       tie(p1_score, p2_score) = compute_final_score();
       if (p1_score == p2_score)
@@ -208,60 +153,53 @@ struct MancalaNode {
       if (p[13] > 24) return -1000000000LL * (2 * p[13] - 48);
     }
 
+    // the game is not yet over
     // cerr << "Depth: " << depth << endl;
-    assert(p1Turn);
-    assert(p[6] <= 24 && p[13] <= 24);
 
-    if (heuristic_idx == 3) {
-      const double my_store_weight = 1.0, chain_weight = 0.9,
-                   opp_store_weight = -0.7, me_close_to_winning = 0.2,
-                   opp_close_to_winning = -0.25, my_side_gems_weight = 0.15,
-                   number_of_moves_weight = 0.4, capture_weight = 0.5;
-      double score = 0;
-      int loop_start = 0, loop_end = 6;
+    int my_side_gems = accumulate(p.begin(), p.begin() + 6, 0);
+    int opp_side_gems = accumulate(p.begin() + 7, p.begin() + 13, 0);
+    int my_store = p[6], opp_store = p[13];
 
-      int my_side_gems = accumulate(p.begin(), p.begin() + 6, 0);
-      int opp_side_gems = accumulate(p.begin() + 7, p.begin() + 13, 0);
+    double score = 0;
 
-      score += my_side_gems_weight * my_side_gems;
-      score += my_store_weight * p[6];
-      score += opp_store_weight * p[13];
-      score += me_close_to_winning * (1 / (25 - p[6]));
-      score += opp_close_to_winning * (1 / (25 - p[13]));
+    if (heuristic_idx == 1) {
+      score = my_store - opp_store;
+    } else if (heuristic_idx == 2) {
+      score =
+          0.75 * (my_store - opp_store) + 0.25 * (my_side_gems - opp_side_gems);
+    } else if (heuristic_idx == 3) {
+      score = 0.7 * (my_store - opp_store) +
+              0.2 * (my_side_gems - opp_side_gems) + 0.5 * moves_won;
+    } else if (heuristic_idx == 4) {
+      score = 1 * (my_store - opp_store) +
+              0.55 * (my_side_gems - opp_side_gems) + 4 * moves_won +
+              2 * captured_gems;
+    } else if (heuristic_idx == 5) {
+      // my custom heuristic
+      const double store_weight = 1.2, side_gems_weight = 0.85,
+                   moves_won_weight = 5, capture_weight = 4,
+                   close_to_winning_weight = 1, best_cap_weight = 2.5;
 
-      int non_empty_pits = 0;
-      for (int i = loop_start; i < loop_end; i++) {
-        if (p[i] > 0) non_empty_pits++;
+      score += store_weight * (my_store - opp_store);
+      score += side_gems_weight * (my_side_gems - opp_side_gems);
+      score += moves_won_weight * moves_won;
+      score += capture_weight * captured_gems;
+      score += close_to_winning_weight *
+               ((1 / sqrt(25 - p[6])) - (1 / sqrt(25 - p[13])));
+
+      int best_cap_p1 = 0, best_cap_p2 = 0;
+      for (int i = 0; i < 6; i++) {
+        if (p[i] <= 1) best_cap_p1 = max(best_cap_p1, p[i + 7]);
+        if (p[i + 7] <= 1) best_cap_p2 = max(best_cap_p2, p[i]);
       }
+      score += best_cap_weight * (best_cap_p1 - best_cap_p2);
+    }
 
-      score += number_of_moves_weight * non_empty_pits;
-
-      int closest_chain_chance = -1, capture_opportunities = 0;
-      for (int i = loop_start; i < loop_end; i++) {
-        if (p[i] == 0) continue;
-        int final = final_bin(i, true);
-        if (final == 6)
-          closest_chain_chance =
-              max(closest_chain_chance,
-                  i);  // the closer to my pit, the better since it might not
-                       // disrupt previous pits for subsqeuent chaining
-        if (final < 6 && p[final] == 0 && p[12 - final] > 0)
-          capture_opportunities = max(capture_opportunities, p[12 - final]);
-      }
-
-      if (closest_chain_chance != -1)
-        score += chain_weight * sqrt(closest_chain_chance);
-      score += capture_weight * capture_opportunities;
-
-      // cerr << "Score: " << score << endl;
-      return score;
-
-    } else
-      return -1;
+    return score;
   }
 
   friend ostream& operator<<(ostream& os, const MancalaNode& node) {
-    os << "\t\t\tP2\n\nIndex:\t";
+    os << "\n\t\t\tP2\n\nIndex:\t";
     // show the indices over the pits
     for (int i = 12; i >= 7; i--) {
       os << i + 1 << "\t";
@@ -294,17 +232,16 @@ struct MancalaNode {
 };
 
 double minimax(MancalaNode node, int depth, double alpha, double beta,
-               bool repeat_move) {
+               bool repeat_move, int heuristics_index) {
   explored++;
 
   if (node.is_game_over())
     return node.evaluate(-1, depth);
   else if (node.p[6] > 24 || node.p[13] > 24)
     return node.evaluate(-2, depth);
-  if (!repeat_move && node.p1Turn && depth >= 6 &&
-      clock() - timer > time_limit_1 * CLOCKS_PER_SEC) {
+  else if (!repeat_move && node.p1Turn && depth >= 8) {
     // cerr << "TLE at depth " << depth << endl;
-    return node.evaluate(3, depth);
+    return node.evaluate(heuristics_index, depth);
   }
 
   vector<int> moves = node.get_next_moves();
@@ -317,16 +254,15 @@ double minimax(MancalaNode node, int depth, double alpha, double beta,
       i++;
       MancalaNode next_node = node;
       double score;
-      int final = node.final_bin(next_move, true);
-      if (final < 6 && next_node.p[final] == 0 && next_node.p[12 - final] > 0)
-        score += 5 * next_node.p[12 - final];
-      bool another_turn = next_node.execute_move(next_move);
 
+      bool another_turn = next_node.execute_move(next_move);
       if (another_turn) {
-        score = minimax(next_node, depth, alpha, beta, true);
+        score =
+            minimax(next_node, depth + 1, alpha, beta, true, heuristics_index);
       } else {
         next_node.p1Turn = !next_node.p1Turn;
-        score = minimax(next_node, depth + 1, alpha, beta, false);
+        score =
+            minimax(next_node, depth + 1, alpha, beta, false, heuristics_index);
       }
 
       // cerr << "Depth " << depth << " Move " << i << " Score " << score <<
@@ -353,17 +289,16 @@ double minimax(MancalaNode node, int depth, double alpha, double beta,
       i++;
       MancalaNode next_node = node;
       double score;
-      int final = node.final_bin(next_move, false);
-      if (final > 6 && final < 13 && next_node.p[final] == 0 &&
-          next_node.p[12 - final] > 0)
-        score -= 5 * next_node.p[12 - final];
+
       bool another_turn = next_node.execute_move(next_move);
 
       if (another_turn) {
-        score = minimax(next_node, depth, alpha, beta, true);
+        score =
+            minimax(next_node, depth + 1, alpha, beta, true, heuristics_index);
       } else {
         next_node.p1Turn = !next_node.p1Turn;
-        score = minimax(next_node, depth + 1, alpha, beta, false);
+        score =
+            minimax(next_node, depth + 1, alpha, beta, false, heuristics_index);
       }
 
       // cerr << "Depth " << depth << " Move " << i << " Score " << score <<
@@ -383,7 +318,7 @@ double minimax(MancalaNode node, int depth, double alpha, double beta,
   }
 }
 
-bool call_my_turn(MancalaNode& node) {
+bool call_human_turn(MancalaNode& node) {
   int move = -1;
   cout << "Your Move: (" << (node.p1Turn ? "1 to 6" : "8 to 13") << "): ";
 
@@ -399,46 +334,48 @@ bool call_my_turn(MancalaNode& node) {
   return node.execute_move(move);
 }
 
-bool call_ai_turn(MancalaNode& node) {
-  int best_move = -1;
+bool call_ai_turn(MancalaNode& node, int heuristics_index) {
   double best_score = -INF;
-  if (!node.p1Turn) {
-    best_score = 1000000;
-  }
+  if (!node.p1Turn) best_score = INF;
+
   vector<int> moves = node.get_next_moves();
+  int best_move = moves.front();
 
-  cerr << "P" << (node.p1Turn ? 1 : 2) << " moves: ";
-  for (int move : moves) {
-    cerr << move + 1 << " ";
+  if (cur_mode == HUMAN_AI) {
+    cerr << "AI moves: ";
+    for (int move : moves) {
+      cerr << move + 1 << " ";
+    }
+    cerr << endl;
   }
-  cerr << endl;
 
-  time_limit_1 = 4.5 / moves.size();
+  // not needed for now
+  if (cur_mode == HUMAN_AI)
+    time_limit = 4 / moves.size();
+  else
+    time_limit = 2 / moves.size();
+
   for (int next_move : moves) {
     MancalaNode next_node = node;
     double score;
-    int final = node.final_bin(next_move, node.p1Turn);
-    if (node.p1Turn) {
-      if (final < 6 && node.p[final] == 0 && node.p[12 - final] > 0) {
-        score += node.p[12 - final] * 5;
-      }
-    } else {
-      if (final > 6 && final < 13 && node.p[final] == 0 &&
-          node.p[12 - final] > 0) {
-        score -= node.p[12 - final] * 5;
-      }
-    }
 
     bool another_turn = next_node.execute_move(next_move);
+
     // start a timer
-    timer = clock();
+    timer = clock();  // not needed for now
+
     if (another_turn) {
-      score = minimax(next_node, 0, -INF, INF, false);
+      score = minimax(next_node, 1, -INF, INF, true, heuristics_index);
     } else {
-      score = minimax(next_node, 1, -INF, INF, false);
+      score = minimax(next_node, 1, -INF, INF, false, heuristics_index);
     }
 
-    cerr << "Move " << next_move + 1 << ", Score: " << score << endl;
+    // stop the timer
+    // cerr << "Time taken: " << (double)(clock() - timer) / CLOCKS_PER_SEC
+    //      << "s\n";
+
+    if (cur_mode == HUMAN_AI)
+      cerr << "Move " << next_move + 1 << ", Score: " << score << endl;
 
     if (node.p1Turn) {
       if (score > best_score) {
@@ -452,52 +389,115 @@ bool call_ai_turn(MancalaNode& node) {
       }
     }
   }
-  cerr << "Explored: " << explored << " Pruned: " << pruned << endl;
-  cout << "Move for player " << (node.p1Turn ? "1" : "2") << ": "
-       << best_move + 1 << endl;
+  if (cur_mode == HUMAN_AI)
+    cerr << "Explored: " << explored << " Pruned: " << pruned << endl;
+  cout << "Move for AI: " << best_move + 1 << endl;
   return node.execute_move(best_move);
 }
 
-int main(int argc, char** argv) {
-  MancalaNode node;
-  cout << node << endl;
+void show_results(MancalaNode& node, bool human_p1, int h1, int h2) {
+  cout << "Game over!\n";
+  pair<int, int> scores = node.compute_final_score();
+  string name1, name2;
 
-  if (argc > 1) {
-    for (int i = 1; i < argc; i++) {
-      if (string(argv[i]) == "r") reorder = true;
-    }
+  if (cur_mode == HUMAN_AI) {
+    name1 = "Human";
+    name2 = "AI";
+    if (!human_p1) swap(name1, name2);
+  } else if (cur_mode == AI_AI) {
+    name1 = "AI (Heuristic " + to_string(h1) + ")";
+    name2 = "AI (Heuristic " + to_string(h2) + ")";
   }
 
-  bool my_turn = false;
+  cout << name1 << ": " << scores.first << endl;
+  cout << name2 << ": " << scores.second << endl;
+
+  if (scores.first > scores.second) {
+    cout << name1 << " wins!\n";
+  } else if (scores.first < scores.second) {
+    cout << name2 << " wins!\n";
+  } else {
+    cout << "It's a tie!\n";
+  }
+}
+
+void run_game(bool& my_turn, int h1, int h2) {
+  MancalaNode node;
+  cout << node << endl;
+  bool human_p1 = my_turn;
 
   while (!node.is_game_over()) {
-    explored = 0;
-    pruned = 0;
+    explored = pruned = 0;
     bool again = false;
-    if (my_turn) {
-      again = call_my_turn(node);
-    } else {
-      again = call_ai_turn(node);
+
+    if (cur_mode == HUMAN_AI) {
+      if (my_turn) {
+        again = call_human_turn(node);
+      } else {
+        again = call_ai_turn(node, h1);  // AI will play here with h1 heuristic
+      }
+    } else if (cur_mode == AI_AI) {
+      if (node.p1Turn) {
+        again = call_ai_turn(node, h1);
+      } else {
+        again = call_ai_turn(node, h2);
+      }
     }
+
     cout << node << endl << endl;
     if (!again) {
-      my_turn = !my_turn;
+      if (cur_mode == HUMAN_AI) my_turn = !my_turn;
       node.p1Turn = !node.p1Turn;
     } else {
       cout << "Another turn for player " << (node.p1Turn ? "1" : "2") << endl;
     }
   }
 
-  cout << "Game over!\n";
-  pair<int, int> scores = node.compute_final_score();
-  cout << "Player 1: " << scores.first << endl;
-  cout << "Player 2: " << scores.second << endl;
-  if (scores.first > scores.second) {
-    cout << "Player 1 wins!\n";
-  } else if (scores.first < scores.second) {
-    cout << "Player 2 wins!\n";
+  show_results(node, human_p1, h1, h2);
+}
+
+void ai_ai() {
+  cur_mode = AI_AI;
+  int h1 = 0, h2 = 0;
+  while (h1 < 1 || h1 > 5) {
+    cout << "Enter AI Player 1 Heuristic (1-5): ";
+    cin >> h1;
+  }
+  while (h2 < 1 || h2 > 5) {
+    cout << "Enter AI Player 2 Heuristic (1-5): ";
+    cin >> h2;
+  }
+
+  bool any;
+  run_game(any, h1, h2);
+}
+
+void human_ai() {
+  cur_mode = HUMAN_AI;
+  int p = 0;
+  while (p < 1 || p > 2) {
+    cout << "Which player do you want to play as? (1/2): ";
+    cin >> p;
+    cout << endl;
+  }
+
+  bool my_turn = (p == 1);
+
+  run_game(my_turn, 5, 5);
+}
+
+int main() {
+  cout << "Choose the game mode:\n";
+  cout << "1. Human vs AI\n";
+  cout << "2. AI vs AI\n\n";
+
+  int mode = 0;
+  while (mode < 1 || mode > 2) cin >> mode;
+
+  if (mode == 1) {
+    human_ai();
   } else {
-    cout << "It's a tie!\n";
+    ai_ai();
   }
 
   return 0;
