@@ -12,6 +12,7 @@ using namespace std;
 int explored = 0, pruned = 0;
 double time_limit;
 const double INF = 2e17;
+int MAX_DEPTH;
 clock_t timer;
 map<pair<int, int>, int> m{{{7, 13}, 0},
                            {{14, 19}, 14},
@@ -231,44 +232,47 @@ struct MancalaNode {
   }
 };
 
+int best_move = -1;
+
 double minimax(MancalaNode node, int depth, double alpha, double beta,
                bool repeat_move, int heuristics_index) {
   explored++;
+  vector<int> moves = node.get_next_moves();
+  if (depth == 0) {
+    assert(moves.size() > 0);
+    best_move = moves[0];
+  }
 
   if (node.is_game_over())
     return node.evaluate(-1, depth);
   else if (node.p[6] > 24 || node.p[13] > 24)
     return node.evaluate(-2, depth);
-  else if (!repeat_move && node.p1Turn && depth >= 8) {
-    // cerr << "TLE at depth " << depth << endl;
+  else if (!repeat_move && depth >= MAX_DEPTH) {
     return node.evaluate(heuristics_index, depth);
   }
 
-  vector<int> moves = node.get_next_moves();
+  double best, score;
 
   if (node.p1Turn) {
-    double best = -INF;
+    best = -INF;
     int i = 0;
 
     for (int next_move : moves) {
       i++;
       MancalaNode next_node = node;
-      double score;
 
       bool another_turn = next_node.execute_move(next_move);
-      if (another_turn) {
-        score =
-            minimax(next_node, depth + 1, alpha, beta, true, heuristics_index);
-      } else {
-        next_node.p1Turn = !next_node.p1Turn;
-        score =
-            minimax(next_node, depth + 1, alpha, beta, false, heuristics_index);
-      }
+      if (!another_turn) next_node.p1Turn = !next_node.p1Turn;
+      score = minimax(next_node, depth + 1, alpha, beta, another_turn,
+                      heuristics_index);
 
       // cerr << "Depth " << depth << " Move " << i << " Score " << score <<
       // "\n";
 
-      best = max(best, score);
+      if (score > best) {
+        best = score;
+        if (depth == 0) best_move = next_move;
+      }
       alpha = max(alpha, best);
 
       if (alpha >= beta) {
@@ -282,29 +286,25 @@ double minimax(MancalaNode node, int depth, double alpha, double beta,
   }
 
   else {
-    double best = INF;
+    best = INF;
     int i = 0;
 
     for (int next_move : moves) {
       i++;
       MancalaNode next_node = node;
-      double score;
 
       bool another_turn = next_node.execute_move(next_move);
-
-      if (another_turn) {
-        score =
-            minimax(next_node, depth + 1, alpha, beta, true, heuristics_index);
-      } else {
-        next_node.p1Turn = !next_node.p1Turn;
-        score =
-            minimax(next_node, depth + 1, alpha, beta, false, heuristics_index);
-      }
+      if (!another_turn) next_node.p1Turn = !next_node.p1Turn;
+      score = minimax(next_node, depth + 1, alpha, beta, another_turn,
+                      heuristics_index);
 
       // cerr << "Depth " << depth << " Move " << i << " Score " << score <<
       // "\n";
 
-      best = min(best, score);
+      if (score < best) {
+        best = score;
+        if (depth == 0) best_move = next_move;
+      }
       beta = min(beta, best);
 
       if (alpha >= beta) {
@@ -335,62 +335,13 @@ bool call_human_turn(MancalaNode& node) {
 }
 
 bool call_ai_turn(MancalaNode& node, int heuristics_index) {
-  double best_score = -INF;
-  if (!node.p1Turn) best_score = INF;
-
-  vector<int> moves = node.get_next_moves();
-  int best_move = moves.front();
-
-  if (cur_mode == HUMAN_AI) {
-    cerr << "AI moves: ";
-    for (int move : moves) {
-      cerr << move + 1 << " ";
-    }
-    cerr << endl;
-  }
-
-  // not needed for now
-  if (cur_mode == HUMAN_AI)
-    time_limit = 4 / moves.size();
-  else
-    time_limit = 2 / moves.size();
-
-  for (int next_move : moves) {
-    MancalaNode next_node = node;
-    double score;
-
-    bool another_turn = next_node.execute_move(next_move);
-
-    // start a timer
-    timer = clock();  // not needed for now
-
-    if (another_turn) {
-      score = minimax(next_node, 1, -INF, INF, true, heuristics_index);
-    } else {
-      score = minimax(next_node, 1, -INF, INF, false, heuristics_index);
-    }
-
-    // stop the timer
-    // cerr << "Time taken: " << (double)(clock() - timer) / CLOCKS_PER_SEC
-    //      << "s\n";
-
-    if (cur_mode == HUMAN_AI)
-      cerr << "Move " << next_move + 1 << ", Score: " << score << endl;
-
-    if (node.p1Turn) {
-      if (score > best_score) {
-        best_score = score;
-        best_move = next_move;
-      }
-    } else {
-      if (score < best_score) {
-        best_score = score;
-        best_move = next_move;
-      }
-    }
-  }
-  if (cur_mode == HUMAN_AI)
-    cerr << "Explored: " << explored << " Pruned: " << pruned << endl;
+  double time_limit = 4;
+  best_move = -1;
+  timer = clock();
+  double score = minimax(node, 0, -INF, INF, false, heuristics_index);
+  cerr << "Time taken: " << (double)(clock() - timer) / CLOCKS_PER_SEC << "s\n";
+  assert(best_move != -1);
+  cerr << "Explored: " << explored << " Pruned: " << pruned << endl;
   cout << "Move for AI: " << best_move + 1 << endl;
   return node.execute_move(best_move);
 }
@@ -469,6 +420,7 @@ void ai_ai() {
   }
 
   bool any;
+  MAX_DEPTH = 10;
   run_game(any, h1, h2);
 }
 
@@ -482,7 +434,7 @@ void human_ai() {
   }
 
   bool my_turn = (p == 1);
-
+  MAX_DEPTH = 12;
   run_game(my_turn, 5, 5);
 }
 
