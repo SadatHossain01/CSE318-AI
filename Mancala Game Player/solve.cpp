@@ -10,10 +10,10 @@
 using namespace std;
 
 int explored = 0, pruned = 0;
-double time_limit;
 const double INF = 2e17;
 int MAX_DEPTH;
 clock_t timer;
+double time_limit = 4;
 map<pair<int, int>, int> m{{{7, 13}, 0},
                            {{14, 19}, 14},
                            {{20, 26}, 13},
@@ -179,14 +179,12 @@ struct MancalaNode {
       // my custom heuristic
       const double store_weight = 1.2, side_gems_weight = 0.85,
                    moves_won_weight = 5, capture_weight = 4,
-                   close_to_winning_weight = 1, best_cap_weight = 2.5;
+                   best_cap_weight = 2.5;
 
       score += store_weight * (my_store - opp_store);
       score += side_gems_weight * (my_side_gems - opp_side_gems);
       score += moves_won_weight * moves_won;
       score += capture_weight * captured_gems;
-      score += close_to_winning_weight *
-               ((1 / sqrt(25 - p[6])) - (1 / sqrt(25 - p[13])));
 
       int best_cap_p1 = 0, best_cap_p2 = 0;
       for (int i = 0; i < 6; i++) {
@@ -335,7 +333,6 @@ bool call_human_turn(MancalaNode& node) {
 }
 
 bool call_ai_turn(MancalaNode& node, int heuristics_index) {
-  double time_limit = 4;
   best_move = -1;
   timer = clock();
   double score = minimax(node, 0, -INF, INF, false, heuristics_index);
@@ -352,21 +349,21 @@ void show_results(MancalaNode& node, bool human_p1, int h1, int h2) {
   string name1, name2;
 
   if (cur_mode == HUMAN_AI) {
-    name1 = "Human";
+    name1 = "You";
     name2 = "AI";
     if (!human_p1) swap(name1, name2);
   } else if (cur_mode == AI_AI) {
-    name1 = "AI (Heuristic " + to_string(h1) + ")";
-    name2 = "AI (Heuristic " + to_string(h2) + ")";
+    name1 = "AI P1 (Heuristic " + to_string(h1) + ")";
+    name2 = "AI P2 (Heuristic " + to_string(h2) + ")";
   }
 
-  cout << name1 << ": " << scores.first << endl;
-  cout << name2 << ": " << scores.second << endl;
+  cout << name1 << "\t: " << scores.first << endl;
+  cout << name2 << "\t: " << scores.second << endl;
 
   if (scores.first > scores.second) {
-    cout << name1 << " wins!\n";
+    cout << name1 << " win" << (name1 == "You" ? "" : "s") << "!\n";
   } else if (scores.first < scores.second) {
-    cout << name2 << " wins!\n";
+    cout << name2 << " win" << (name2 == "You" ? "" : "s") << "!\n";
   } else {
     cout << "It's a tie!\n";
   }
