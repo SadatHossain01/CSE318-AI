@@ -13,12 +13,7 @@ int explored = 0, pruned = 0;
 const double INF = 2e17;
 int MAX_DEPTH;
 clock_t timer;
-double time_limit = 4;
-map<pair<int, int>, int> m{{{7, 13}, 0},
-                           {{14, 19}, 14},
-                           {{20, 26}, 13},
-                           {{27, 32}, 27},
-                           {{33, 39}, 26}};
+double time_limit = 0.9;  // for each branch
 enum GameMode { HUMAN_AI, AI_AI };
 GameMode cur_mode;
 
@@ -34,24 +29,6 @@ struct MancalaNode {
     p[6] = p[13] = 0;
     captured_gems = moves_won = 0;
     p1Turn = true;
-  }
-
-  inline int final_bin(int move_idx, bool turn1) {
-    // given the move, it will return the final bin index after the move
-    int res = -1;
-    int tot = move_idx + p[move_idx];
-    if (turn1) {
-      res = tot % 13;
-    } else {
-      for (auto it = m.begin(); it != m.end(); it++) {
-        if (it->first.first <= tot && tot <= it->first.second) {
-          res = tot - it->second;
-          break;
-        }
-      }
-    }
-    assert(res != -1);
-    return res;
   }
 
   vector<int> get_next_moves() {
@@ -176,10 +153,9 @@ struct MancalaNode {
               0.55 * (my_side_gems - opp_side_gems) + 4 * moves_won +
               2 * captured_gems;
     } else if (heuristic_idx == 5) {
-      // my custom heuristic
-      const double store_weight = 1.2, side_gems_weight = 0.85,
-                   moves_won_weight = 5, capture_weight = 4,
-                   best_cap_weight = 2.5;
+      const double store_weight = 1.2, side_gems_weight = 1,
+                   moves_won_weight = 3, capture_weight = 1.5,
+                   best_cap_weight = 1.75;
 
       score += store_weight * (my_store - opp_store);
       score += side_gems_weight * (my_side_gems - opp_side_gems);
@@ -231,6 +207,7 @@ struct MancalaNode {
 };
 
 int best_move = -1;
+clock_t start_timer;
 
 double minimax(MancalaNode node, int depth, double alpha, double beta,
                bool repeat_move, int heuristics_index) {
@@ -245,7 +222,9 @@ double minimax(MancalaNode node, int depth, double alpha, double beta,
     return node.evaluate(-1, depth);
   else if (node.p[6] > 24 || node.p[13] > 24)
     return node.evaluate(-2, depth);
-  else if (!repeat_move && depth >= MAX_DEPTH) {
+  else if (!repeat_move && depth >= MAX_DEPTH &&
+           (cur_mode == AI_AI ||
+            clock() - start_timer >= time_limit * CLOCKS_PER_SEC)) {
     return node.evaluate(heuristics_index, depth);
   }
 
@@ -258,6 +237,8 @@ double minimax(MancalaNode node, int depth, double alpha, double beta,
     for (int next_move : moves) {
       i++;
       MancalaNode next_node = node;
+
+      if (depth == 0) start_timer = clock();
 
       bool another_turn = next_node.execute_move(next_move);
       if (!another_turn) next_node.p1Turn = !next_node.p1Turn;
@@ -290,6 +271,8 @@ double minimax(MancalaNode node, int depth, double alpha, double beta,
     for (int next_move : moves) {
       i++;
       MancalaNode next_node = node;
+
+      if (depth == 0) start_timer = clock();
 
       bool another_turn = next_node.execute_move(next_move);
       if (!another_turn) next_node.p1Turn = !next_node.p1Turn;
