@@ -182,6 +182,7 @@ pair<Cut, long long> grasp_maxcut()
 
 int main()
 {
+    srand(time(NULL));
     cin >> n_vertices >> n_edges;
     adj_list.resize(n_vertices);
     adj_matrix.assign(n_vertices, vector<long long>(n_vertices, 0));
