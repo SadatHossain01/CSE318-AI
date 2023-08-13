@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cassert>
 #include <iostream>
 #include <numeric>
 #include <set>
@@ -6,17 +7,23 @@
 
 using namespace std;
 
-const long long INF = 2e17;
+#ifdef LOCAL
+#include "debug.h"
+#else
+#define debug(...)
+#endif
 
-int n_vertices, n_edges;
-vector<vector<long long>> adj_list;
-vector<vector<long long>> adj_matrix;
+struct Edge
+{
+    int u, v;
+    long long w;
+};
 
 struct Cut
 {
     set<int> x, y; // x and y are the two disjoint sets of vertices in the cut, such that x U y = V
 
-    long long cut_value()
+    long long cut_value(const vector<vector<long long>> &adj_matrix)
     {
         long long ret = 0;
         for (int i : x)
@@ -25,6 +32,21 @@ struct Cut
         return ret;
     }
 };
+
+const long long INF = 2e17;
+const int MAX_ITER = 500;
+const int CUTOFF_SECONDS = 60;
+double alpha;
+double alpha_1_cutoff = 0.999995; // if alpha > alpha_1_cutoff, assume alpha to be 1 and use greedy choice
+int n_vertices, n_edges;
+vector<vector<long long>> adj_matrix;
+long long min_weight = INF, max_weight = -INF;
+Edge best_edge = {-1, -1, -INF}, worst_edge = {-1, -1, INF};
+enum SOLUTION_TYPE
+{
+    SEMI_GREEDY,
+    RANDOMIZED,
+} solution_type;
 
 pair<long long, long long> calculate_contribution(int v, const set<int> &x, const set<int> &y)
 {
@@ -39,79 +61,94 @@ pair<long long, long long> calculate_contribution(int v, const set<int> &x, cons
     return {cut_x, cut_y};
 }
 
+int choose_next_candidate(const set<int> &rem, const vector<pair<long long, long long>> &cut_values,
+                          long long threshold)
+{
+    // Construct Restricted Candidate List
+    vector<int> rcl;
+    for (int v : rem)
+        if (max(cut_values[v].first, cut_values[v].second) >= threshold)
+            rcl.push_back(v);
+
+    // Choose a random vertex from RCL
+    int idx = rand() % rcl.size();
+    return rcl[idx];
+}
+
+Cut randomized_maxcut()
+{
+    Cut ret;
+    for (int i = 1; i <= n_vertices; i++)
+        if (rand() % 2)
+            ret.x.insert(i);
+        else
+            ret.y.insert(i);
+    return ret;
+}
+
 Cut semi_greedy_maxcut()
 {
-    // Choose a threshold weight for cutoff
-    double alpha = (double)rand() / RAND_MAX;
-    long long min_weight = INF, max_weight = -INF;
-    for (int i = 0; i < adj_list.size(); i++)
-    {
-        for (int j = 0; j < adj_list[i].size(); j++)
-        {
-            min_weight = min(min_weight, adj_list[i][j]);
-            max_weight = max(max_weight, adj_list[i][j]);
-        }
-    }
-    long long threshold = alpha * (max_weight - min_weight) + min_weight;
-
-    // Construct Restricted Candidate List
-    vector<pair<int, int>> candidates;
-    for (int i = 0; i < adj_list.size(); i++)
-    {
-        for (int j = 0; j < adj_list[i].size(); j++)
-        {
-            if (i > j)
-                continue;
-            if (adj_list[i][j] >= threshold)
-                candidates.push_back({i, j});
-        }
-    }
-
     Cut ret;
-
-    // Choose a random edge from RCL
     set<int> remaining_vertices; // remaining vertices not in X or Y yet
-    for (int i = 0; i < n_vertices; i++)
+    for (int i = 1; i <= n_vertices; i++)
         remaining_vertices.insert(i);
-    int idx = rand() % candidates.size();
-    pair<int, int> initial = candidates[idx];
 
-    // Add the chosen edge endpoints to X and Y as initial vertices
-    ret.x.insert(initial.first);
-    ret.y.insert(initial.second);
-    remaining_vertices.erase(initial.first);
-    remaining_vertices.erase(initial.second);
+    Edge initial;
+
+    if (alpha > alpha_1_cutoff)
+        initial = best_edge; // greedy choice, use the best edge
+    else
+    {
+        // Choose a threshold weight for cutoff
+        long long threshold = alpha * (max_weight - min_weight) + min_weight;
+
+        // Construct Restricted Candidate List
+        vector<pair<int, int>> candidates;
+        for (int i = 1; i <= n_vertices; i++)
+            for (int j = i + 1; j <= n_vertices; j++)
+                if (adj_matrix[i][j] >= threshold)
+                    candidates.push_back({i, j});
+
+        // Choose a random edge from RCL
+        int idx = rand() % candidates.size();
+
+        initial = {candidates[idx].first, candidates[idx].second,
+                   adj_matrix[candidates[idx].first][candidates[idx].second]};
+    }
+
+    // Add the chosen vertices to X and Y as initial vertices
+    ret.x.insert(initial.u);
+    ret.y.insert(initial.v);
+    remaining_vertices.erase(initial.u);
+    remaining_vertices.erase(initial.v);
 
     while (ret.x.size() + ret.y.size() < n_vertices)
     {
         long long min_x = INF, min_y = INF;   // minimum contribution to cut weight by adding a vertex to X or Y
         long long max_x = -INF, max_y = -INF; // maximum contribution to cut weight by adding a vertex to X or Y
-        vector<pair<long long, long long>> cut_values(n_vertices); // cut_values[i] = {cut_x, cut_y} for vertex i
+        vector<pair<long long, long long>> cut_values(n_vertices + 1); // cut_values[i] = {cut_x, cut_y} for vertex i
+
+        pair<int, long long> max_vertex = {-1, -INF};
         for (int v : remaining_vertices)
         {
             cut_values[v] = calculate_contribution(v, ret.x, ret.y);
+            if (max(cut_values[v].first, cut_values[v].second) > max_vertex.second)
+                max_vertex = {v, max(cut_values[v].first, cut_values[v].second)};
             min_x = min(min_x, cut_values[v].first);
             min_y = min(min_y, cut_values[v].second);
             max_x = max(max_x, cut_values[v].first);
             max_y = max(max_y, cut_values[v].second);
         }
 
-        // Choose a threshold weight for cutoff
+        // Choose a vertex based on alpha and the cut values
         min_weight = min(min_x, min_y);
         max_weight = max(max_x, max_y);
-        threshold = alpha * (max_weight - min_weight) + min_weight;
-
-        // Construct Restricted Candidate List
-        vector<int> rcl;
-        for (int v : remaining_vertices)
-        {
-            if (cut_values[v].first >= threshold || cut_values[v].second >= threshold)
-                rcl.push_back(v);
-        }
-
-        // Choose a random vertex from RCL
-        idx = rand() % rcl.size();
-        int chosen = rcl[idx];
+        int chosen;
+        if (alpha > alpha_1_cutoff)
+            chosen = max_vertex.first; // greedy choice, use the best vertex
+        else
+            chosen =
+                choose_next_candidate(remaining_vertices, cut_values, alpha * (max_weight - min_weight) + min_weight);
 
         // Add the chosen vertex to X or Y depending on which cut value is greater
         if (cut_values[chosen].first >= cut_values[chosen].second)
@@ -122,7 +159,7 @@ Cut semi_greedy_maxcut()
         // Remove the chosen vertex from remaining set of vertices
         remaining_vertices.erase(chosen);
     }
-
+    assert(remaining_vertices.empty());
     return ret;
 }
 
@@ -132,7 +169,7 @@ Cut local_search_maxcut(Cut &cut)
     while (changed)
     {
         changed = false;
-        for (int i = 0; i < n_vertices && !changed; i++)
+        for (int i = 1; i <= n_vertices && !changed; i++)
         {
             pair<long long, long long> contribution = calculate_contribution(i, cut.x, cut.y);
             bool present_in_x = find(cut.x.begin(), cut.x.end(), i) != cut.x.end();
@@ -159,55 +196,74 @@ Cut local_search_maxcut(Cut &cut)
 pair<Cut, long long> grasp_maxcut()
 {
     long long best_cut_value = -INF;
-
-    bool changed = true;
+    clock_t start = clock();
     Cut c;
-    while (changed)
+    int iter = 0;
+
+    auto should_continue = [&]() -> bool {
+        if (alpha > alpha_1_cutoff)
+            return iter < 1; // greedy, no need to run again and again
+        else
+            return ((clock() - start) / CLOCKS_PER_SEC) < CUTOFF_SECONDS;
+    };
+
+    while (should_continue())
     {
-        c = semi_greedy_maxcut();
+        max_weight = best_edge.w;
+        min_weight = worst_edge.w;
+        if (solution_type == SEMI_GREEDY)
+            c = semi_greedy_maxcut();
+        else if (solution_type == RANDOMIZED)
+            c = randomized_maxcut();
+        else
+            assert(false);
         c = local_search_maxcut(c);
 
-        long long cut_value = c.cut_value();
+        long long cut_value = c.cut_value(adj_matrix);
         if (cut_value > best_cut_value)
-        {
             best_cut_value = cut_value;
-            changed = true;
-        }
-        else
-            changed = false;
+        cout << "Iteration " << ++iter << ":\t" << cut_value << endl;
     }
 
     return {c, best_cut_value};
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     srand(time(NULL));
-    cin >> n_vertices >> n_edges;
-    adj_list.resize(n_vertices);
-    adj_matrix.assign(n_vertices, vector<long long>(n_vertices, 0));
 
-    // vertices should be 0-indexed
+    solution_type = SEMI_GREEDY;
+    alpha = (double)rand() / RAND_MAX;
+
+    if (argc >= 2)
+    {
+        if (string(argv[1]) == "g")
+            alpha = 1; // greedy is basically semi-greedy with alpha = 1
+        else if (string(argv[1]) == "r")
+            solution_type = RANDOMIZED;
+    }
+
+    if (solution_type == SEMI_GREEDY)
+        cout << "Alpha: " << alpha << endl;
+
+    cin >> n_vertices >> n_edges;
+    adj_matrix.assign(n_vertices + 1, vector<long long>(n_vertices + 1, 0));
+
+    // input vertices are 1-indexed
     for (int i = 0; i < n_edges; i++)
     {
-        int u, v, w;
+        int u, v;
+        long long w;
         cin >> u >> v >> w;
-        u--;
-        v--;
-        adj_list[u].push_back(v);
-        adj_list[v].push_back(u);
-        adj_matrix[u][v] = w;
-        adj_matrix[v][u] = w;
+        adj_matrix[u][v] += w;
+        adj_matrix[v][u] += w;
+        if (w > best_edge.w)
+            best_edge = {u, v, w};
+        if (w < worst_edge.w)
+            worst_edge = {u, v, w};
     }
 
     pair<Cut, long long> ans = grasp_maxcut();
+
     cout << "Cut value: " << ans.second << endl;
-    cout << "Vertices in X: ";
-    for (int i : ans.first.x)
-        cout << i + 1 << " ";
-    cout << endl;
-    cout << "Vertices in Y: ";
-    for (int i : ans.first.y)
-        cout << i + 1 << " ";
-    cout << endl;
 }
