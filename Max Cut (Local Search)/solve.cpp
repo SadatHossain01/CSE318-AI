@@ -78,7 +78,7 @@ struct Result
     {
         os << res.file_name << "\t|V| = " << res.n_vertices << "\t|E| = " << res.n_edges << "\t"
            << enum_to_string(res.construction_type) << " Cut Value = " << res.construction_cut_value
-           << "\t\tLocal Cut Value = " << res.local_search_cut_value
+           << "\t\t\tLocal Cut Value = " << res.local_search_cut_value
            << "\tLocal Search Iterations = " << res.local_iterations;
         if (res.construction_type == SEMI_GREEDY_1)
             os << "\t\tGRASP Iterations = " << res.GRASP_iterations << "\tGRASP Cut Value = " << res.GRASP_cut_value;
