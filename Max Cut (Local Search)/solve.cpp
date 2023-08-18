@@ -16,7 +16,6 @@ enum SOLUTION_TYPE
 {
     GREEDY_1,
     SEMI_GREEDY_1,
-    GREEDY_2,
     RANDOMIZED
 };
 
@@ -28,8 +27,6 @@ inline std::string enum_to_string(SOLUTION_TYPE st)
         return "Greedy-1";
     case SEMI_GREEDY_1:
         return "Semi-Greedy-1";
-    case GREEDY_2:
-        return "Greedy-2";
     case RANDOMIZED:
         return "Randomized";
     default:
@@ -78,10 +75,10 @@ struct Result
     {
         os << res.file_name << "\t|V| = " << res.n_vertices << "\t|E| = " << res.n_edges << "\t"
            << enum_to_string(res.construction_type) << " Cut Value = " << res.construction_cut_value
-           << "\t\t\tLocal Cut Value = " << res.local_search_cut_value
+           << "\t\tLocal Cut Value = " << res.local_search_cut_value
            << "\tLocal Search Iterations = " << res.local_iterations;
         if (res.construction_type == SEMI_GREEDY_1)
-            os << "\t\tGRASP Iterations = " << res.GRASP_iterations << "\tGRASP Cut Value = " << res.GRASP_cut_value;
+            os << "\tGRASP Iterations = " << res.GRASP_iterations << "\tGRASP Cut Value = " << res.GRASP_cut_value;
         return os;
     }
 };
@@ -209,56 +206,6 @@ Cut semi_greedy_maxcut()
     return ret;
 }
 
-Cut another_greedy_maxcut()
-{
-    Cut ret;
-    std::vector<Edge> edges;
-    for (int i = 1; i <= n_vertices; i++)
-        for (int j = i + 1; j <= n_vertices; j++)
-        {
-            if (adj_matrix[i][j])
-                edges.push_back({i, j, adj_matrix[i][j]});
-        }
-
-    std::sort(edges.begin(), edges.end(), [](const Edge &e1, const Edge &e2) -> bool { return e1.w > e2.w; });
-    assert(edges.begin()->w == best_edge.w);
-
-    // Iterate over edges in non-increasing order of weights
-    // If both vertices of an edge are still absent from X or Y, randomly add them to opposite sets
-    // If one is already present in X or Y, add the other to the opposite set
-    // If both are present in the same set, do nothing
-    int u_present = 0, v_present = 0;
-    for (Edge e : edges)
-    {
-        std::pair<int, int> p = {e.u, e.v};
-        u_present = 0, v_present = 0; // 0 means not present, 1 means present in X, 2 means present in Y
-
-        u_present = 1 * ret.x.count(e.u) + 2 * ret.y.count(e.u);
-        v_present = 1 * ret.x.count(e.v) + 2 * ret.y.count(e.v);
-
-        if (u_present == v_present)
-        {
-            if (u_present == 0)
-            {
-                // neither u nor v has been added to X or Y yet
-                if (rand() % 2 == 1)
-                    std::swap(p.first, p.second);
-                ret.x.insert(p.first);
-                ret.y.insert(p.second);
-            }
-            // otherwise both are present in the same set, do nothing
-        }
-        else
-        {
-            if (u_present == 2 || v_present == 1)
-                std::swap(p.first, p.second);
-            ret.x.insert(p.first);
-            ret.y.insert(p.second);
-        }
-    }
-    return ret;
-}
-
 Cut local_search_maxcut(Cut &cut, Result &result)
 {
     bool changed = true;
@@ -298,7 +245,7 @@ std::pair<Cut, long long> grasp_maxcut(Result &result)
     int iter = 0;
 
     auto should_continue = [&]() -> bool {
-        if (result.construction_type == GREEDY_1 || result.construction_type == GREEDY_2)
+        if (result.construction_type == GREEDY_1)
             return iter < 1; // greedy, no need to run again and again
         else
             return iter < MIN_ITER;
@@ -310,8 +257,6 @@ std::pair<Cut, long long> grasp_maxcut(Result &result)
             c = semi_greedy_maxcut(); // alpha = 1 will give greedy solution
         else if (result.construction_type == RANDOMIZED)
             c = randomized_maxcut();
-        else if (result.construction_type == GREEDY_2)
-            c = another_greedy_maxcut();
         else
             assert(false);
 
@@ -381,12 +326,6 @@ int main(int argc, char *argv[])
     alpha = 1;
     grasp_maxcut(res_greedy_1);
     std::cout << res_greedy_1 << "\n";
-
-    // Greedy 2
-    Result res_greedy_2(input_file, n_vertices, n_edges, GREEDY_2);
-    alpha = 1;
-    grasp_maxcut(res_greedy_2);
-    std::cout << res_greedy_2 << "\n";
 
     // Semi-Greedy 1
     Result res_semi_greedy_1(input_file, n_vertices, n_edges, SEMI_GREEDY_1);
