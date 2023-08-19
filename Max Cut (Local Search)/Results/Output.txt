@@ -1,0 +1,270 @@
+input/g11.rud	|V| = 800	|E| = 1600	Greedy-2 Cut Value = 364		Local Cut Value = 477	Local Search Iterations = 96
+input/g13.rud	|V| = 800	|E| = 1600	Greedy-2 Cut Value = 358		Local Cut Value = 474	Local Search Iterations = 98
+input/g12.rud	|V| = 800	|E| = 1600	Greedy-2 Cut Value = 325		Local Cut Value = 459	Local Search Iterations = 107
+input/g19.rud	|V| = 800	|E| = 4661	Greedy-2 Cut Value = 258		Local Cut Value = 714	Local Search Iterations = 203
+input/g17.rud	|V| = 800	|E| = 4667	Greedy-2 Cut Value = 2592		Local Cut Value = 2908	Local Search Iterations = 169
+input/g15.rud	|V| = 800	|E| = 4661	Greedy-2 Cut Value = 2596		Local Cut Value = 2914	Local Search Iterations = 183
+input/g14.rud	|V| = 800	|E| = 4694	Greedy-2 Cut Value = 2616		Local Cut Value = 2924	Local Search Iterations = 173
+input/g18.rud	|V| = 800	|E| = 4694	Greedy-2 Cut Value = 335		Local Cut Value = 828	Local Search Iterations = 244
+input/g20.rud	|V| = 800	|E| = 4672	Greedy-2 Cut Value = 320		Local Cut Value = 795	Local Search Iterations = 243
+input/g16.rud	|V| = 800	|E| = 4672	Greedy-2 Cut Value = 2583		Local Cut Value = 2916	Local Search Iterations = 192
+input/g21.rud	|V| = 800	|E| = 4667	Greedy-2 Cut Value = 291		Local Cut Value = 791	Local Search Iterations = 239
+input/g11.rud	|V| = 800	|E| = 1600	Greedy-1 Cut Value = 485		Local Cut Value = 487	Local Search Iterations = 1
+input/g12.rud	|V| = 800	|E| = 1600	Greedy-1 Cut Value = 479		Local Cut Value = 487	Local Search Iterations = 4
+input/g13.rud	|V| = 800	|E| = 1600	Greedy-1 Cut Value = 505		Local Cut Value = 509	Local Search Iterations = 2
+input/g14.rud	|V| = 800	|E| = 4694	Greedy-1 Cut Value = 2927		Local Cut Value = 2972	Local Search Iterations = 33
+input/g17.rud	|V| = 800	|E| = 4667	Greedy-1 Cut Value = 2904		Local Cut Value = 2957	Local Search Iterations = 38
+input/g16.rud	|V| = 800	|E| = 4672	Greedy-1 Cut Value = 2886		Local Cut Value = 2941	Local Search Iterations = 43
+input/g15.rud	|V| = 800	|E| = 4661	Greedy-1 Cut Value = 2890		Local Cut Value = 2946	Local Search Iterations = 46
+input/g20.rud	|V| = 800	|E| = 4672	Greedy-1 Cut Value = 777		Local Cut Value = 827	Local Search Iterations = 33
+input/g18.rud	|V| = 800	|E| = 4694	Greedy-1 Cut Value = 839		Local Cut Value = 884	Local Search Iterations = 33
+input/g21.rud	|V| = 800	|E| = 4667	Greedy-1 Cut Value = 793		Local Cut Value = 826	Local Search Iterations = 23
+input/g51.rud	|V| = 1000	|E| = 5909	Greedy-2 Cut Value = 3278		Local Cut Value = 3659	Local Search Iterations = 210
+input/g19.rud	|V| = 800	|E| = 4661	Greedy-1 Cut Value = 756		Local Cut Value = 801	Local Search Iterations = 33
+input/g6.rud	|V| = 800	|E| = 19176	Greedy-1 Cut Value = 1796		Local Cut Value = 1941	Local Search Iterations = 71
+input/g52.rud	|V| = 1000	|E| = 5916	Greedy-2 Cut Value = 3257		Local Cut Value = 3683	Local Search Iterations = 236
+input/g53.rud	|V| = 1000	|E| = 5914	Greedy-2 Cut Value = 3297		Local Cut Value = 3670	Local Search Iterations = 224
+input/g4.rud	|V| = 800	|E| = 19176	Greedy-1 Cut Value = 11287		Local Cut Value = 11435	Local Search Iterations = 79
+input/g10.rud	|V| = 800	|E| = 19176	Greedy-1 Cut Value = 1665		Local Cut Value = 1766	Local Search Iterations = 47
+input/g9.rud	|V| = 800	|E| = 19176	Greedy-1 Cut Value = 1629		Local Cut Value = 1768	Local Search Iterations = 65
+input/g3.rud	|V| = 800	|E| = 19176	Greedy-1 Cut Value = 11222		Local Cut Value = 11417	Local Search Iterations = 105
+input/g54.rud	|V| = 1000	|E| = 5916	Greedy-2 Cut Value = 3284		Local Cut Value = 3671	Local Search Iterations = 210
+input/g5.rud	|V| = 800	|E| = 19176	Greedy-1 Cut Value = 11248		Local Cut Value = 11365	Local Search Iterations = 58
+input/g1.rud	|V| = 800	|E| = 19176	Greedy-1 Cut Value = 11225		Local Cut Value = 11400	Local Search Iterations = 92
+input/g8.rud	|V| = 800	|E| = 19176	Greedy-1 Cut Value = 1635		Local Cut Value = 1818	Local Search Iterations = 109
+input/g2.rud	|V| = 800	|E| = 19176	Greedy-1 Cut Value = 11250		Local Cut Value = 11386	Local Search Iterations = 69
+input/g7.rud	|V| = 800	|E| = 19176	Greedy-1 Cut Value = 1552		Local Cut Value = 1756	Local Search Iterations = 106
+input/g6.rud	|V| = 800	|E| = 19176	Greedy-2 Cut Value = 418		Local Cut Value = 1845	Local Search Iterations = 501
+input/g10.rud	|V| = 800	|E| = 19176	Greedy-2 Cut Value = 197		Local Cut Value = 1706	Local Search Iterations = 578
+input/g8.rud	|V| = 800	|E| = 19176	Greedy-2 Cut Value = 146		Local Cut Value = 1755	Local Search Iterations = 568
+input/g52.rud	|V| = 1000	|E| = 5916	Greedy-1 Cut Value = 3664		Local Cut Value = 3755	Local Search Iterations = 61
+input/g54.rud	|V| = 1000	|E| = 5916	Greedy-1 Cut Value = 3664		Local Cut Value = 3729	Local Search Iterations = 46
+input/g53.rud	|V| = 1000	|E| = 5914	Greedy-1 Cut Value = 3634		Local Cut Value = 3722	Local Search Iterations = 55
+input/g46.rud	|V| = 1000	|E| = 9990	Greedy-1 Cut Value = 6410		Local Cut Value = 6490	Local Search Iterations = 42
+input/g51.rud	|V| = 1000	|E| = 5909	Greedy-1 Cut Value = 3659		Local Cut Value = 3733	Local Search Iterations = 58
+input/g9.rud	|V| = 800	|E| = 19176	Greedy-2 Cut Value = 177		Local Cut Value = 1759	Local Search Iterations = 613
+input/g7.rud	|V| = 800	|E| = 19176	Greedy-2 Cut Value = 171		Local Cut Value = 1699	Local Search Iterations = 582
+input/g43.rud	|V| = 1000	|E| = 9990	Greedy-1 Cut Value = 6384		Local Cut Value = 6437	Local Search Iterations = 33
+input/g47.rud	|V| = 1000	|E| = 9990	Greedy-1 Cut Value = 6330		Local Cut Value = 6435	Local Search Iterations = 52
+input/g45.rud	|V| = 1000	|E| = 9990	Greedy-1 Cut Value = 6423		Local Cut Value = 6479	Local Search Iterations = 32
+input/g47.rud	|V| = 1000	|E| = 9990	Greedy-2 Cut Value = 5382		Local Cut Value = 6423	Local Search Iterations = 464
+input/g45.rud	|V| = 1000	|E| = 9990	Greedy-2 Cut Value = 5327		Local Cut Value = 6344	Local Search Iterations = 441
+input/g43.rud	|V| = 1000	|E| = 9990	Greedy-2 Cut Value = 5409		Local Cut Value = 6379	Local Search Iterations = 423
+input/g44.rud	|V| = 1000	|E| = 9990	Greedy-2 Cut Value = 5359		Local Cut Value = 6397	Local Search Iterations = 455
+input/g44.rud	|V| = 1000	|E| = 9990	Greedy-1 Cut Value = 6371		Local Cut Value = 6450	Local Search Iterations = 55
+input/g46.rud	|V| = 1000	|E| = 9990	Greedy-2 Cut Value = 5364		Local Cut Value = 6453	Local Search Iterations = 460
+input/g4.rud	|V| = 800	|E| = 19176	Greedy-2 Cut Value = 9842		Local Cut Value = 11381	Local Search Iterations = 549
+input/g3.rud	|V| = 800	|E| = 19176	Greedy-2 Cut Value = 9853		Local Cut Value = 11338	Local Search Iterations = 572
+input/g1.rud	|V| = 800	|E| = 19176	Greedy-2 Cut Value = 9832		Local Cut Value = 11322	Local Search Iterations = 546
+input/g2.rud	|V| = 800	|E| = 19176	Greedy-2 Cut Value = 9887		Local Cut Value = 11369	Local Search Iterations = 495
+input/g34.rud	|V| = 2000	|E| = 4000	Greedy-2 Cut Value = 795		Local Cut Value = 1087	Local Search Iterations = 263
+input/g33.rud	|V| = 2000	|E| = 4000	Greedy-2 Cut Value = 891		Local Cut Value = 1178	Local Search Iterations = 242
+input/g5.rud	|V| = 800	|E| = 19176	Greedy-2 Cut Value = 9898		Local Cut Value = 11345	Local Search Iterations = 540
+input/g32.rud	|V| = 2000	|E| = 4000	Greedy-2 Cut Value = 890		Local Cut Value = 1150	Local Search Iterations = 256
+input/g36.rud	|V| = 2000	|E| = 11766	Greedy-2 Cut Value = 6592		Local Cut Value = 7285	Local Search Iterations = 409
+input/g38.rud	|V| = 2000	|E| = 11779	Greedy-2 Cut Value = 6543		Local Cut Value = 7296	Local Search Iterations = 402
+input/g35.rud	|V| = 2000	|E| = 11778	Greedy-2 Cut Value = 6621		Local Cut Value = 7318	Local Search Iterations = 390
+input/g41.rud	|V| = 2000	|E| = 11785	Greedy-2 Cut Value = 833		Local Cut Value = 1895	Local Search Iterations = 498
+input/g37.rud	|V| = 2000	|E| = 11785	Greedy-2 Cut Value = 6559		Local Cut Value = 7349	Local Search Iterations = 433
+input/g39.rud	|V| = 2000	|E| = 11778	Greedy-2 Cut Value = 744		Local Cut Value = 1990	Local Search Iterations = 569
+input/g42.rud	|V| = 2000	|E| = 11779	Greedy-2 Cut Value = 924		Local Cut Value = 2093	Local Search Iterations = 554
+input/g40.rud	|V| = 2000	|E| = 11766	Greedy-2 Cut Value = 800		Local Cut Value = 2036	Local Search Iterations = 577
+input/g32.rud	|V| = 2000	|E| = 4000	Greedy-1 Cut Value = 1225		Local Cut Value = 1251	Local Search Iterations = 13
+input/g13.rud	|V| = 800	|E| = 1600	Semi-Greedy-2 Cut Value = 364		Local Cut Value = 481	Local Search Iterations = 102	GRASP Iterations = 50	GRASP Cut Value = 501
+input/g33.rud	|V| = 2000	|E| = 4000	Greedy-1 Cut Value = 1207		Local Cut Value = 1223	Local Search Iterations = 8
+input/g12.rud	|V| = 800	|E| = 1600	Semi-Greedy-2 Cut Value = 352		Local Cut Value = 459	Local Search Iterations = 97	GRASP Iterations = 50	GRASP Cut Value = 482
+input/g34.rud	|V| = 2000	|E| = 4000	Greedy-1 Cut Value = 1211		Local Cut Value = 1233	Local Search Iterations = 11
+input/g11.rud	|V| = 800	|E| = 1600	Semi-Greedy-2 Cut Value = 355		Local Cut Value = 468	Local Search Iterations = 101	GRASP Iterations = 50	GRASP Cut Value = 494
+input/g37.rud	|V| = 2000	|E| = 11785	Greedy-1 Cut Value = 7315		Local Cut Value = 7443	Local Search Iterations = 88
+input/g28.rud	|V| = 2000	|E| = 19990	Greedy-2 Cut Value = 656		Local Cut Value = 2761	Local Search Iterations = 871
+input/g38.rud	|V| = 2000	|E| = 11779	Greedy-1 Cut Value = 7307		Local Cut Value = 7426	Local Search Iterations = 89
+input/g31.rud	|V| = 2000	|E| = 19990	Greedy-2 Cut Value = 611		Local Cut Value = 2790	Local Search Iterations = 939
+input/g42.rud	|V| = 2000	|E| = 11779	Greedy-1 Cut Value = 2117		Local Cut Value = 2186	Local Search Iterations = 52
+input/g30.rud	|V| = 2000	|E| = 19990	Greedy-2 Cut Value = 870		Local Cut Value = 2856	Local Search Iterations = 855
+input/g35.rud	|V| = 2000	|E| = 11778	Greedy-1 Cut Value = 7334		Local Cut Value = 7441	Local Search Iterations = 77
+input/g41.rud	|V| = 2000	|E| = 11785	Greedy-1 Cut Value = 2052		Local Cut Value = 2120	Local Search Iterations = 47
+input/g36.rud	|V| = 2000	|E| = 11766	Greedy-1 Cut Value = 7273		Local Cut Value = 7401	Local Search Iterations = 97
+input/g39.rud	|V| = 2000	|E| = 11778	Greedy-1 Cut Value = 2034		Local Cut Value = 2134	Local Search Iterations = 75
+input/g24.rud	|V| = 2000	|E| = 19990	Greedy-1 Cut Value = 12811		Local Cut Value = 12944	Local Search Iterations = 77
+input/g25.rud	|V| = 2000	|E| = 19990	Greedy-1 Cut Value = 12831		Local Cut Value = 12950	Local Search Iterations = 70
+input/g29.rud	|V| = 2000	|E| = 19990	Greedy-2 Cut Value = 722		Local Cut Value = 2817	Local Search Iterations = 907
+input/g23.rud	|V| = 2000	|E| = 19990	Greedy-1 Cut Value = 12785		Local Cut Value = 12937	Local Search Iterations = 81
+input/g40.rud	|V| = 2000	|E| = 11766	Greedy-1 Cut Value = 2042		Local Cut Value = 2123	Local Search Iterations = 53
+input/g22.rud	|V| = 2000	|E| = 19990	Greedy-1 Cut Value = 12747		Local Cut Value = 12943	Local Search Iterations = 105
+input/g27.rud	|V| = 2000	|E| = 19990	Greedy-2 Cut Value = 836		Local Cut Value = 2851	Local Search Iterations = 929
+input/g26.rud	|V| = 2000	|E| = 19990	Greedy-1 Cut Value = 12818		Local Cut Value = 12958	Local Search Iterations = 81
+input/g28.rud	|V| = 2000	|E| = 19990	Greedy-1 Cut Value = 2635		Local Cut Value = 2847	Local Search Iterations = 119
+input/g30.rud	|V| = 2000	|E| = 19990	Greedy-1 Cut Value = 2718		Local Cut Value = 2937	Local Search Iterations = 126
+input/g29.rud	|V| = 2000	|E| = 19990	Greedy-1 Cut Value = 2724		Local Cut Value = 2945	Local Search Iterations = 119
+input/g27.rud	|V| = 2000	|E| = 19990	Greedy-1 Cut Value = 2707		Local Cut Value = 2923	Local Search Iterations = 129
+input/g22.rud	|V| = 2000	|E| = 19990	Greedy-2 Cut Value = 10902		Local Cut Value = 12785	Local Search Iterations = 805
+input/g23.rud	|V| = 2000	|E| = 19990	Greedy-2 Cut Value = 10771		Local Cut Value = 12737	Local Search Iterations = 814
+input/g31.rud	|V| = 2000	|E| = 19990	Greedy-1 Cut Value = 2668		Local Cut Value = 2931	Local Search Iterations = 158
+input/g50.rud	|V| = 3000	|E| = 6000	Greedy-2 Cut Value = 4149		Local Cut Value = 4817	Local Search Iterations = 309
+input/g11.rud	|V| = 800	|E| = 1600	Randomized Cut Value = 17		Local Cut Value = 427	Local Search Iterations = 182
+input/g25.rud	|V| = 2000	|E| = 19990	Greedy-2 Cut Value = 10739		Local Cut Value = 12876	Local Search Iterations = 924
+input/g26.rud	|V| = 2000	|E| = 19990	Greedy-2 Cut Value = 10748		Local Cut Value = 12780	Local Search Iterations = 873
+input/g12.rud	|V| = 800	|E| = 1600	Randomized Cut Value = -4		Local Cut Value = 417	Local Search Iterations = 186
+input/g48.rud	|V| = 3000	|E| = 6000	Greedy-2 Cut Value = 4163		Local Cut Value = 4927	Local Search Iterations = 358
+input/g49.rud	|V| = 3000	|E| = 6000	Greedy-2 Cut Value = 4177		Local Cut Value = 4959	Local Search Iterations = 357
+input/g13.rud	|V| = 800	|E| = 1600	Randomized Cut Value = 20		Local Cut Value = 441	Local Search Iterations = 186
+input/g16.rud	|V| = 800	|E| = 4672	Randomized Cut Value = 2329		Local Cut Value = 2909	Local Search Iterations = 268
+input/g17.rud	|V| = 800	|E| = 4667	Randomized Cut Value = 2331		Local Cut Value = 2906	Local Search Iterations = 271
+input/g14.rud	|V| = 800	|E| = 4694	Randomized Cut Value = 2349		Local Cut Value = 2922	Local Search Iterations = 262
+input/g24.rud	|V| = 2000	|E| = 19990	Greedy-2 Cut Value = 10730		Local Cut Value = 12808	Local Search Iterations = 883
+input/g15.rud	|V| = 800	|E| = 4661	Randomized Cut Value = 2325		Local Cut Value = 2906	Local Search Iterations = 270
+input/g19.rud	|V| = 800	|E| = 4661	Randomized Cut Value = -52		Local Cut Value = 741	Local Search Iterations = 329
+input/g21.rud	|V| = 800	|E| = 4667	Randomized Cut Value = -32		Local Cut Value = 773	Local Search Iterations = 330
+input/g18.rud	|V| = 800	|E| = 4694	Randomized Cut Value = 32		Local Cut Value = 830	Local Search Iterations = 322
+input/g20.rud	|V| = 800	|E| = 4672	Randomized Cut Value = -20		Local Cut Value = 777	Local Search Iterations = 326
+input/g19.rud	|V| = 800	|E| = 4661	Semi-Greedy-2 Cut Value = 284		Local Cut Value = 745	Local Search Iterations = 223	GRASP Iterations = 50	GRASP Cut Value = 797
+input/g20.rud	|V| = 800	|E| = 4672	Semi-Greedy-2 Cut Value = 314		Local Cut Value = 770	Local Search Iterations = 216	GRASP Iterations = 50	GRASP Cut Value = 819
+input/g18.rud	|V| = 800	|E| = 4694	Semi-Greedy-2 Cut Value = 367		Local Cut Value = 830	Local Search Iterations = 220	GRASP Iterations = 50	GRASP Cut Value = 871
+input/g21.rud	|V| = 800	|E| = 4667	Semi-Greedy-2 Cut Value = 322		Local Cut Value = 778	Local Search Iterations = 225	GRASP Iterations = 50	GRASP Cut Value = 819
+input/g50.rud	|V| = 3000	|E| = 6000	Greedy-1 Cut Value = 5879		Local Cut Value = 5879	Local Search Iterations = 0
+input/g14.rud	|V| = 800	|E| = 4694	Semi-Greedy-2 Cut Value = 2610		Local Cut Value = 2921	Local Search Iterations = 172	GRASP Iterations = 50	GRASP Cut Value = 2942
+input/g48.rud	|V| = 3000	|E| = 6000	Greedy-1 Cut Value = 5999		Local Cut Value = 5999	Local Search Iterations = 0
+input/g17.rud	|V| = 800	|E| = 4667	Semi-Greedy-2 Cut Value = 2597		Local Cut Value = 2903	Local Search Iterations = 176	GRASP Iterations = 50	GRASP Cut Value = 2931
+input/g12.rud	|V| = 800	|E| = 1600	Semi-Greedy-1 Cut Value = 433		Local Cut Value = 452	Local Search Iterations = 10	GRASP Iterations = 50	GRASP Cut Value = 490
+input/g49.rud	|V| = 3000	|E| = 6000	Greedy-1 Cut Value = 5999		Local Cut Value = 5999	Local Search Iterations = 0
+input/g13.rud	|V| = 800	|E| = 1600	Semi-Greedy-1 Cut Value = 455		Local Cut Value = 475	Local Search Iterations = 10	GRASP Iterations = 50	GRASP Cut Value = 496
+input/g15.rud	|V| = 800	|E| = 4661	Semi-Greedy-2 Cut Value = 2596		Local Cut Value = 2903	Local Search Iterations = 175	GRASP Iterations = 50	GRASP Cut Value = 2930
+input/g17.rud	|V| = 800	|E| = 4667	Semi-Greedy-1 Cut Value = 2917		Local Cut Value = 2949	Local Search Iterations = 26	GRASP Iterations = 50	GRASP Cut Value = 2972
+input/g16.rud	|V| = 800	|E| = 4672	Semi-Greedy-2 Cut Value = 2600		Local Cut Value = 2910	Local Search Iterations = 175	GRASP Iterations = 50	GRASP Cut Value = 2931
+input/g16.rud	|V| = 800	|E| = 4672	Semi-Greedy-1 Cut Value = 2921		Local Cut Value = 2953	Local Search Iterations = 25	GRASP Iterations = 50	GRASP Cut Value = 2968
+input/g11.rud	|V| = 800	|E| = 1600	Semi-Greedy-1 Cut Value = 443		Local Cut Value = 462	Local Search Iterations = 10	GRASP Iterations = 50	GRASP Cut Value = 488
+input/g18.rud	|V| = 800	|E| = 4694	Semi-Greedy-1 Cut Value = 823		Local Cut Value = 877	Local Search Iterations = 37	GRASP Iterations = 50	GRASP Cut Value = 928
+input/g53.rud	|V| = 1000	|E| = 5914	Randomized Cut Value = 2960		Local Cut Value = 3673	Local Search Iterations = 328
+input/g52.rud	|V| = 1000	|E| = 5916	Randomized Cut Value = 2961		Local Cut Value = 3677	Local Search Iterations = 332
+input/g15.rud	|V| = 800	|E| = 4661	Semi-Greedy-1 Cut Value = 2916		Local Cut Value = 2948	Local Search Iterations = 26	GRASP Iterations = 50	GRASP Cut Value = 2969
+input/g54.rud	|V| = 1000	|E| = 5916	Randomized Cut Value = 2963		Local Cut Value = 3672	Local Search Iterations = 329
+input/g21.rud	|V| = 800	|E| = 4667	Semi-Greedy-1 Cut Value = 755		Local Cut Value = 813	Local Search Iterations = 39	GRASP Iterations = 50	GRASP Cut Value = 850
+input/g14.rud	|V| = 800	|E| = 4694	Semi-Greedy-1 Cut Value = 2939		Local Cut Value = 2969	Local Search Iterations = 24	GRASP Iterations = 50	GRASP Cut Value = 2995
+input/g5.rud	|V| = 800	|E| = 19176	Semi-Greedy-1 Cut Value = 11254		Local Cut Value = 11412	Local Search Iterations = 78	GRASP Iterations = 50	GRASP Cut Value = 11482
+input/g3.rud	|V| = 800	|E| = 19176	Semi-Greedy-1 Cut Value = 11241		Local Cut Value = 11395	Local Search Iterations = 80	GRASP Iterations = 50	GRASP Cut Value = 11493
+input/g20.rud	|V| = 800	|E| = 4672	Semi-Greedy-1 Cut Value = 725		Local Cut Value = 801	Local Search Iterations = 49	GRASP Iterations = 50	GRASP Cut Value = 839
+input/g19.rud	|V| = 800	|E| = 4661	Semi-Greedy-1 Cut Value = 688		Local Cut Value = 767	Local Search Iterations = 51	GRASP Iterations = 50	GRASP Cut Value = 816
+input/g7.rud	|V| = 800	|E| = 19176	Semi-Greedy-1 Cut Value = 1579		Local Cut Value = 1763	Local Search Iterations = 90	GRASP Iterations = 50	GRASP Cut Value = 1864
+input/g4.rud	|V| = 800	|E| = 19176	Semi-Greedy-1 Cut Value = 11249		Local Cut Value = 11414	Local Search Iterations = 86	GRASP Iterations = 50	GRASP Cut Value = 11473
+input/g2.rud	|V| = 800	|E| = 19176	Semi-Greedy-1 Cut Value = 11228		Local Cut Value = 11395	Local Search Iterations = 85	GRASP Iterations = 50	GRASP Cut Value = 11495
+input/g6.rud	|V| = 800	|E| = 19176	Semi-Greedy-1 Cut Value = 1742		Local Cut Value = 1932	Local Search Iterations = 94	GRASP Iterations = 50	GRASP Cut Value = 2005
+input/g51.rud	|V| = 1000	|E| = 5909	Randomized Cut Value = 2946		Local Cut Value = 3671	Local Search Iterations = 335
+input/g4.rud	|V| = 800	|E| = 19176	Randomized Cut Value = 9600		Local Cut Value = 11388	Local Search Iterations = 625
+input/g10.rud	|V| = 800	|E| = 19176	Randomized Cut Value = -70		Local Cut Value = 1751	Local Search Iterations = 624
+input/g9.rud	|V| = 800	|E| = 19176	Semi-Greedy-1 Cut Value = 1583		Local Cut Value = 1806	Local Search Iterations = 109	GRASP Iterations = 50	GRASP Cut Value = 1875
+input/g9.rud	|V| = 800	|E| = 19176	Randomized Cut Value = -24		Local Cut Value = 1802	Local Search Iterations = 625
+input/g1.rud	|V| = 800	|E| = 19176	Randomized Cut Value = 9569		Local Cut Value = 11372	Local Search Iterations = 629
+input/g2.rud	|V| = 800	|E| = 19176	Randomized Cut Value = 9600		Local Cut Value = 11366	Local Search Iterations = 605
+input/g1.rud	|V| = 800	|E| = 19176	Semi-Greedy-1 Cut Value = 11205		Local Cut Value = 11387	Local Search Iterations = 94	GRASP Iterations = 50	GRASP Cut Value = 11449
+input/g8.rud	|V| = 800	|E| = 19176	Semi-Greedy-1 Cut Value = 1524		Local Cut Value = 1768	Local Search Iterations = 119	GRASP Iterations = 50	GRASP Cut Value = 1859
+input/g3.rud	|V| = 800	|E| = 19176	Randomized Cut Value = 9578		Local Cut Value = 11369	Local Search Iterations = 626
+input/g10.rud	|V| = 800	|E| = 19176	Semi-Greedy-1 Cut Value = 1575		Local Cut Value = 1761	Local Search Iterations = 91	GRASP Iterations = 50	GRASP Cut Value = 1829
+input/g5.rud	|V| = 800	|E| = 19176	Randomized Cut Value = 9582		Local Cut Value = 11381	Local Search Iterations = 626
+input/g8.rud	|V| = 800	|E| = 19176	Randomized Cut Value = -84		Local Cut Value = 1756	Local Search Iterations = 628
+input/g6.rud	|V| = 800	|E| = 19176	Randomized Cut Value = 84		Local Cut Value = 1906	Local Search Iterations = 632
+input/g7.rud	|V| = 800	|E| = 19176	Randomized Cut Value = -90		Local Cut Value = 1762	Local Search Iterations = 632
+input/g45.rud	|V| = 1000	|E| = 9990	Randomized Cut Value = 4995		Local Cut Value = 6395	Local Search Iterations = 557
+input/g53.rud	|V| = 1000	|E| = 5914	Semi-Greedy-2 Cut Value = 3292		Local Cut Value = 3671	Local Search Iterations = 215	GRASP Iterations = 50	GRASP Cut Value = 3698
+input/g54.rud	|V| = 1000	|E| = 5916	Semi-Greedy-1 Cut Value = 3689		Local Cut Value = 3727	Local Search Iterations = 30	GRASP Iterations = 50	GRASP Cut Value = 3749
+input/g43.rud	|V| = 1000	|E| = 9990	Randomized Cut Value = 4989		Local Cut Value = 6402	Local Search Iterations = 574
+input/g54.rud	|V| = 1000	|E| = 5916	Semi-Greedy-2 Cut Value = 3287		Local Cut Value = 3672	Local Search Iterations = 213	GRASP Iterations = 50	GRASP Cut Value = 3706
+input/g52.rud	|V| = 1000	|E| = 5916	Semi-Greedy-1 Cut Value = 3694		Local Cut Value = 3732	Local Search Iterations = 31	GRASP Iterations = 50	GRASP Cut Value = 3760
+input/g51.rud	|V| = 1000	|E| = 5909	Semi-Greedy-2 Cut Value = 3290		Local Cut Value = 3670	Local Search Iterations = 217	GRASP Iterations = 50	GRASP Cut Value = 3723
+input/g46.rud	|V| = 1000	|E| = 9990	Randomized Cut Value = 5005		Local Cut Value = 6393	Local Search Iterations = 556
+input/g47.rud	|V| = 1000	|E| = 9990	Randomized Cut Value = 4996		Local Cut Value = 6404	Local Search Iterations = 574
+input/g53.rud	|V| = 1000	|E| = 5914	Semi-Greedy-1 Cut Value = 3684		Local Cut Value = 3725	Local Search Iterations = 32	GRASP Iterations = 50	GRASP Cut Value = 3748
+input/g46.rud	|V| = 1000	|E| = 9990	Semi-Greedy-1 Cut Value = 6342		Local Cut Value = 6449	Local Search Iterations = 63	GRASP Iterations = 50	GRASP Cut Value = 6518
+input/g44.rud	|V| = 1000	|E| = 9990	Randomized Cut Value = 4990		Local Cut Value = 6394	Local Search Iterations = 565
+input/g51.rud	|V| = 1000	|E| = 5909	Semi-Greedy-1 Cut Value = 3691		Local Cut Value = 3729	Local Search Iterations = 31	GRASP Iterations = 50	GRASP Cut Value = 3751
+input/g43.rud	|V| = 1000	|E| = 9990	Semi-Greedy-1 Cut Value = 6345		Local Cut Value = 6451	Local Search Iterations = 62	GRASP Iterations = 50	GRASP Cut Value = 6522
+input/g45.rud	|V| = 1000	|E| = 9990	Semi-Greedy-1 Cut Value = 6337		Local Cut Value = 6439	Local Search Iterations = 60	GRASP Iterations = 50	GRASP Cut Value = 6507
+input/g44.rud	|V| = 1000	|E| = 9990	Semi-Greedy-1 Cut Value = 6335		Local Cut Value = 6444	Local Search Iterations = 64	GRASP Iterations = 50	GRASP Cut Value = 6506
+input/g47.rud	|V| = 1000	|E| = 9990	Semi-Greedy-1 Cut Value = 6342		Local Cut Value = 6445	Local Search Iterations = 61	GRASP Iterations = 50	GRASP Cut Value = 6497
+input/g52.rud	|V| = 1000	|E| = 5916	Semi-Greedy-2 Cut Value = 3283		Local Cut Value = 3675	Local Search Iterations = 220	GRASP Iterations = 50	GRASP Cut Value = 3696
+input/g10.rud	|V| = 800	|E| = 19176	Semi-Greedy-2 Cut Value = 214		Local Cut Value = 1747	Local Search Iterations = 543	GRASP Iterations = 50	GRASP Cut Value = 1837
+input/g6.rud	|V| = 800	|E| = 19176	Semi-Greedy-2 Cut Value = 361		Local Cut Value = 1918	Local Search Iterations = 564	GRASP Iterations = 50	GRASP Cut Value = 2010
+input/g9.rud	|V| = 800	|E| = 19176	Semi-Greedy-2 Cut Value = 263		Local Cut Value = 1795	Local Search Iterations = 556	GRASP Iterations = 50	GRASP Cut Value = 1881
+input/g7.rud	|V| = 800	|E| = 19176	Semi-Greedy-2 Cut Value = 234		Local Cut Value = 1750	Local Search Iterations = 546	GRASP Iterations = 50	GRASP Cut Value = 1852
+input/g8.rud	|V| = 800	|E| = 19176	Semi-Greedy-2 Cut Value = 207		Local Cut Value = 1746	Local Search Iterations = 555	GRASP Iterations = 50	GRASP Cut Value = 1821
+input/g44.rud	|V| = 1000	|E| = 9990	Semi-Greedy-2 Cut Value = 5367		Local Cut Value = 6395	Local Search Iterations = 446	GRASP Iterations = 50	GRASP Cut Value = 6464
+input/g46.rud	|V| = 1000	|E| = 9990	Semi-Greedy-2 Cut Value = 5356		Local Cut Value = 6398	Local Search Iterations = 447	GRASP Iterations = 50	GRASP Cut Value = 6471
+input/g45.rud	|V| = 1000	|E| = 9990	Semi-Greedy-2 Cut Value = 5359		Local Cut Value = 6391	Local Search Iterations = 448	GRASP Iterations = 50	GRASP Cut Value = 6457
+input/g47.rud	|V| = 1000	|E| = 9990	Semi-Greedy-2 Cut Value = 5355		Local Cut Value = 6404	Local Search Iterations = 463	GRASP Iterations = 50	GRASP Cut Value = 6478
+input/g43.rud	|V| = 1000	|E| = 9990	Semi-Greedy-2 Cut Value = 5366		Local Cut Value = 6396	Local Search Iterations = 447	GRASP Iterations = 50	GRASP Cut Value = 6464
+input/g4.rud	|V| = 800	|E| = 19176	Semi-Greedy-2 Cut Value = 9884		Local Cut Value = 11381	Local Search Iterations = 542	GRASP Iterations = 50	GRASP Cut Value = 11462
+input/g2.rud	|V| = 800	|E| = 19176	Semi-Greedy-2 Cut Value = 9877		Local Cut Value = 11363	Local Search Iterations = 537	GRASP Iterations = 50	GRASP Cut Value = 11442
+input/g1.rud	|V| = 800	|E| = 19176	Semi-Greedy-2 Cut Value = 9883		Local Cut Value = 11367	Local Search Iterations = 553	GRASP Iterations = 50	GRASP Cut Value = 11425
+input/g3.rud	|V| = 800	|E| = 19176	Semi-Greedy-2 Cut Value = 9862		Local Cut Value = 11368	Local Search Iterations = 552	GRASP Iterations = 50	GRASP Cut Value = 11430
+input/g5.rud	|V| = 800	|E| = 19176	Semi-Greedy-2 Cut Value = 9879		Local Cut Value = 11376	Local Search Iterations = 542	GRASP Iterations = 50	GRASP Cut Value = 11483
+input/g34.rud	|V| = 2000	|E| = 4000	Semi-Greedy-2 Cut Value = 833		Local Cut Value = 1123	Local Search Iterations = 254	GRASP Iterations = 50	GRASP Cut Value = 1157
+input/g32.rud	|V| = 2000	|E| = 4000	Randomized Cut Value = 13		Local Cut Value = 1059	Local Search Iterations = 463
+input/g34.rud	|V| = 2000	|E| = 4000	Randomized Cut Value = -26		Local Cut Value = 1036	Local Search Iterations = 470
+input/g33.rud	|V| = 2000	|E| = 4000	Randomized Cut Value = -11		Local Cut Value = 1034	Local Search Iterations = 463
+input/g38.rud	|V| = 2000	|E| = 11779	Randomized Cut Value = 5885		Local Cut Value = 7326	Local Search Iterations = 667
+input/g35.rud	|V| = 2000	|E| = 11778	Randomized Cut Value = 5890		Local Cut Value = 7329	Local Search Iterations = 667
+input/g36.rud	|V| = 2000	|E| = 11766	Randomized Cut Value = 5889		Local Cut Value = 7320	Local Search Iterations = 665
+input/g37.rud	|V| = 2000	|E| = 11785	Randomized Cut Value = 5889		Local Cut Value = 7325	Local Search Iterations = 664
+input/g32.rud	|V| = 2000	|E| = 4000	Semi-Greedy-2 Cut Value = 868		Local Cut Value = 1149	Local Search Iterations = 252	GRASP Iterations = 50	GRASP Cut Value = 1187
+input/g33.rud	|V| = 2000	|E| = 4000	Semi-Greedy-2 Cut Value = 865		Local Cut Value = 1131	Local Search Iterations = 253	GRASP Iterations = 50	GRASP Cut Value = 1179
+input/g41.rud	|V| = 2000	|E| = 11785	Randomized Cut Value = -11		Local Cut Value = 1991	Local Search Iterations = 818
+input/g42.rud	|V| = 2000	|E| = 11779	Randomized Cut Value = 69		Local Cut Value = 2069	Local Search Iterations = 808
+input/g39.rud	|V| = 2000	|E| = 11778	Randomized Cut Value = 12		Local Cut Value = 2011	Local Search Iterations = 808
+input/g40.rud	|V| = 2000	|E| = 11766	Randomized Cut Value = -51		Local Cut Value = 1991	Local Search Iterations = 829
+input/g35.rud	|V| = 2000	|E| = 11778	Semi-Greedy-1 Cut Value = 7365		Local Cut Value = 7440	Local Search Iterations = 58	GRASP Iterations = 50	GRASP Cut Value = 7470
+input/g34.rud	|V| = 2000	|E| = 4000	Semi-Greedy-1 Cut Value = 1099		Local Cut Value = 1139	Local Search Iterations = 20	GRASP Iterations = 50	GRASP Cut Value = 1172
+input/g33.rud	|V| = 2000	|E| = 4000	Semi-Greedy-1 Cut Value = 1091		Local Cut Value = 1132	Local Search Iterations = 21	GRASP Iterations = 50	GRASP Cut Value = 1174
+input/g36.rud	|V| = 2000	|E| = 11766	Semi-Greedy-1 Cut Value = 7359		Local Cut Value = 7439	Local Search Iterations = 62	GRASP Iterations = 50	GRASP Cut Value = 7475
+input/g22.rud	|V| = 2000	|E| = 19990	Randomized Cut Value = 9990		Local Cut Value = 12817	Local Search Iterations = 1141
+input/g38.rud	|V| = 2000	|E| = 11779	Semi-Greedy-1 Cut Value = 7361		Local Cut Value = 7440	Local Search Iterations = 62	GRASP Iterations = 50	GRASP Cut Value = 7471
+input/g31.rud	|V| = 2000	|E| = 19990	Randomized Cut Value = -29		Local Cut Value = 2795	Local Search Iterations = 1143
+input/g37.rud	|V| = 2000	|E| = 11785	Semi-Greedy-1 Cut Value = 7368		Local Cut Value = 7445	Local Search Iterations = 61	GRASP Iterations = 50	GRASP Cut Value = 7497
+input/g23.rud	|V| = 2000	|E| = 19990	Randomized Cut Value = 9978		Local Cut Value = 12820	Local Search Iterations = 1140
+input/g24.rud	|V| = 2000	|E| = 19990	Randomized Cut Value = 10009		Local Cut Value = 12813	Local Search Iterations = 1130
+input/g27.rud	|V| = 2000	|E| = 19990	Randomized Cut Value = -22		Local Cut Value = 2813	Local Search Iterations = 1145
+input/g23.rud	|V| = 2000	|E| = 19990	Semi-Greedy-1 Cut Value = 12723		Local Cut Value = 12916	Local Search Iterations = 114	GRASP Iterations = 50	GRASP Cut Value = 12999
+input/g29.rud	|V| = 2000	|E| = 19990	Randomized Cut Value = 42		Local Cut Value = 2873	Local Search Iterations = 1131
+input/g25.rud	|V| = 2000	|E| = 19990	Randomized Cut Value = 9997		Local Cut Value = 12818	Local Search Iterations = 1136
+input/g40.rud	|V| = 2000	|E| = 11766	Semi-Greedy-1 Cut Value = 1872		Local Cut Value = 2061	Local Search Iterations = 119	GRASP Iterations = 50	GRASP Cut Value = 2133
+input/g26.rud	|V| = 2000	|E| = 19990	Semi-Greedy-1 Cut Value = 12717		Local Cut Value = 12922	Local Search Iterations = 122	GRASP Iterations = 50	GRASP Cut Value = 13001
+input/g38.rud	|V| = 2000	|E| = 11779	Semi-Greedy-2 Cut Value = 6552		Local Cut Value = 7325	Local Search Iterations = 433	GRASP Iterations = 50	GRASP Cut Value = 7361
+input/g30.rud	|V| = 2000	|E| = 19990	Randomized Cut Value = 56		Local Cut Value = 2885	Local Search Iterations = 1135
+input/g35.rud	|V| = 2000	|E| = 11778	Semi-Greedy-2 Cut Value = 6568		Local Cut Value = 7323	Local Search Iterations = 426	GRASP Iterations = 50	GRASP Cut Value = 7357
+input/g42.rud	|V| = 2000	|E| = 11779	Semi-Greedy-1 Cut Value = 1939		Local Cut Value = 2139	Local Search Iterations = 124	GRASP Iterations = 50	GRASP Cut Value = 2204
+input/g32.rud	|V| = 2000	|E| = 4000	Semi-Greedy-1 Cut Value = 1116		Local Cut Value = 1159	Local Search Iterations = 22	GRASP Iterations = 50	GRASP Cut Value = 1192
+input/g26.rud	|V| = 2000	|E| = 19990	Randomized Cut Value = 9995		Local Cut Value = 12805	Local Search Iterations = 1131
+input/g28.rud	|V| = 2000	|E| = 19990	Randomized Cut Value = -48		Local Cut Value = 2772	Local Search Iterations = 1123
+input/g36.rud	|V| = 2000	|E| = 11766	Semi-Greedy-2 Cut Value = 6554		Local Cut Value = 7318	Local Search Iterations = 430	GRASP Iterations = 50	GRASP Cut Value = 7369
+input/g22.rud	|V| = 2000	|E| = 19990	Semi-Greedy-1 Cut Value = 12710		Local Cut Value = 12910	Local Search Iterations = 118	GRASP Iterations = 50	GRASP Cut Value = 13009
+input/g24.rud	|V| = 2000	|E| = 19990	Semi-Greedy-1 Cut Value = 12716		Local Cut Value = 12920	Local Search Iterations = 120	GRASP Iterations = 50	GRASP Cut Value = 13039
+input/g25.rud	|V| = 2000	|E| = 19990	Semi-Greedy-1 Cut Value = 12721		Local Cut Value = 12921	Local Search Iterations = 118	GRASP Iterations = 50	GRASP Cut Value = 13003
+input/g30.rud	|V| = 2000	|E| = 19990	Semi-Greedy-1 Cut Value = 2644		Local Cut Value = 2937	Local Search Iterations = 167	GRASP Iterations = 50	GRASP Cut Value = 3042
+input/g41.rud	|V| = 2000	|E| = 11785	Semi-Greedy-2 Cut Value = 841		Local Cut Value = 1977	Local Search Iterations = 540	GRASP Iterations = 50	GRASP Cut Value = 2047
+input/g29.rud	|V| = 2000	|E| = 19990	Semi-Greedy-1 Cut Value = 2635		Local Cut Value = 2934	Local Search Iterations = 170	GRASP Iterations = 50	GRASP Cut Value = 3032
+input/g41.rud	|V| = 2000	|E| = 11785	Semi-Greedy-1 Cut Value = 1886		Local Cut Value = 2069	Local Search Iterations = 115	GRASP Iterations = 50	GRASP Cut Value = 2133
+input/g31.rud	|V| = 2000	|E| = 19990	Semi-Greedy-1 Cut Value = 2556		Local Cut Value = 2855	Local Search Iterations = 169	GRASP Iterations = 50	GRASP Cut Value = 2928
+input/g40.rud	|V| = 2000	|E| = 11766	Semi-Greedy-2 Cut Value = 782		Local Cut Value = 1979	Local Search Iterations = 555	GRASP Iterations = 50	GRASP Cut Value = 2063
+input/g39.rud	|V| = 2000	|E| = 11778	Semi-Greedy-1 Cut Value = 1851		Local Cut Value = 2062	Local Search Iterations = 130	GRASP Iterations = 50	GRASP Cut Value = 2138
+input/g37.rud	|V| = 2000	|E| = 11785	Semi-Greedy-2 Cut Value = 6567		Local Cut Value = 7329	Local Search Iterations = 422	GRASP Iterations = 50	GRASP Cut Value = 7368
+input/g28.rud	|V| = 2000	|E| = 19990	Semi-Greedy-1 Cut Value = 2540		Local Cut Value = 2827	Local Search Iterations = 164	GRASP Iterations = 50	GRASP Cut Value = 2917
+input/g27.rud	|V| = 2000	|E| = 19990	Semi-Greedy-1 Cut Value = 2567		Local Cut Value = 2865	Local Search Iterations = 171	GRASP Iterations = 50	GRASP Cut Value = 2933
+input/g42.rud	|V| = 2000	|E| = 11779	Semi-Greedy-2 Cut Value = 901		Local Cut Value = 2064	Local Search Iterations = 551	GRASP Iterations = 50	GRASP Cut Value = 2117
+input/g39.rud	|V| = 2000	|E| = 11778	Semi-Greedy-2 Cut Value = 842		Local Cut Value = 2014	Local Search Iterations = 547	GRASP Iterations = 50	GRASP Cut Value = 2083
+input/g28.rud	|V| = 2000	|E| = 19990	Semi-Greedy-2 Cut Value = 686		Local Cut Value = 2773	Local Search Iterations = 896	GRASP Iterations = 50	GRASP Cut Value = 2835
+input/g31.rud	|V| = 2000	|E| = 19990	Semi-Greedy-2 Cut Value = 688		Local Cut Value = 2803	Local Search Iterations = 916	GRASP Iterations = 50	GRASP Cut Value = 2939
+input/g30.rud	|V| = 2000	|E| = 19990	Semi-Greedy-2 Cut Value = 809		Local Cut Value = 2879	Local Search Iterations = 894	GRASP Iterations = 50	GRASP Cut Value = 2971
+input/g29.rud	|V| = 2000	|E| = 19990	Semi-Greedy-2 Cut Value = 786		Local Cut Value = 2862	Local Search Iterations = 899	GRASP Iterations = 50	GRASP Cut Value = 2929
+input/g27.rud	|V| = 2000	|E| = 19990	Semi-Greedy-2 Cut Value = 727		Local Cut Value = 2806	Local Search Iterations = 905	GRASP Iterations = 50	GRASP Cut Value = 2900
+input/g24.rud	|V| = 2000	|E| = 19990	Semi-Greedy-2 Cut Value = 10734		Local Cut Value = 12813	Local Search Iterations = 897	GRASP Iterations = 50	GRASP Cut Value = 12905
+input/g26.rud	|V| = 2000	|E| = 19990	Semi-Greedy-2 Cut Value = 10739		Local Cut Value = 12804	Local Search Iterations = 901	GRASP Iterations = 50	GRASP Cut Value = 12918
+input/g25.rud	|V| = 2000	|E| = 19990	Semi-Greedy-2 Cut Value = 10744		Local Cut Value = 12820	Local Search Iterations = 892	GRASP Iterations = 50	GRASP Cut Value = 12924
+input/g50.rud	|V| = 3000	|E| = 6000	Semi-Greedy-2 Cut Value = 4187		Local Cut Value = 4891	Local Search Iterations = 326	GRASP Iterations = 50	GRASP Cut Value = 5036
+input/g49.rud	|V| = 3000	|E| = 6000	Semi-Greedy-2 Cut Value = 4169		Local Cut Value = 4878	Local Search Iterations = 329	GRASP Iterations = 50	GRASP Cut Value = 5000
+input/g48.rud	|V| = 3000	|E| = 6000	Semi-Greedy-2 Cut Value = 4174		Local Cut Value = 4892	Local Search Iterations = 333	GRASP Iterations = 50	GRASP Cut Value = 4964
+input/g22.rud	|V| = 2000	|E| = 19990	Semi-Greedy-2 Cut Value = 10757		Local Cut Value = 12815	Local Search Iterations = 892	GRASP Iterations = 50	GRASP Cut Value = 12924
+input/g23.rud	|V| = 2000	|E| = 19990	Semi-Greedy-2 Cut Value = 10743		Local Cut Value = 12806	Local Search Iterations = 885	GRASP Iterations = 50	GRASP Cut Value = 12910
+input/g48.rud	|V| = 3000	|E| = 6000	Randomized Cut Value = 2992		Local Cut Value = 5013	Local Search Iterations = 839
+input/g50.rud	|V| = 3000	|E| = 6000	Randomized Cut Value = 2989		Local Cut Value = 5013	Local Search Iterations = 841
+input/g49.rud	|V| = 3000	|E| = 6000	Randomized Cut Value = 2993		Local Cut Value = 5013	Local Search Iterations = 836
+input/g49.rud	|V| = 3000	|E| = 6000	Semi-Greedy-1 Cut Value = 5760		Local Cut Value = 5766	Local Search Iterations = 3	GRASP Iterations = 50	GRASP Cut Value = 5936
+input/g50.rud	|V| = 3000	|E| = 6000	Semi-Greedy-1 Cut Value = 5743		Local Cut Value = 5747	Local Search Iterations = 2	GRASP Iterations = 50	GRASP Cut Value = 5874
+input/g48.rud	|V| = 3000	|E| = 6000	Semi-Greedy-1 Cut Value = 5755		Local Cut Value = 5759	Local Search Iterations = 2	GRASP Iterations = 50	GRASP Cut Value = 5888

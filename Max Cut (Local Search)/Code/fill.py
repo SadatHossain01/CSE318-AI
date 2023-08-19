@@ -1,9 +1,7 @@
 import pandas as pd
-import openpyxl
 from openpyxl import load_workbook
-import xlsxwriter
 
-text_file_path = 'out.txt'
+text_file_path = 'Output.txt'
 excel_file_path = 'MaxCut.xlsx'
 
 wb = load_workbook(excel_file_path)
