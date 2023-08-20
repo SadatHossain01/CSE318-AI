@@ -1,8 +1,8 @@
 import pandas as pd
 from openpyxl import load_workbook
 
-text_file_path = 'Output.txt'
-excel_file_path = 'MaxCut.xlsx'
+text_file_path = '../Results/out.txt'
+excel_file_path = '../Results/MaxCut.xlsx'
 
 wb = load_workbook(excel_file_path)
 ws = wb.active

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-rm -rf out.txt
-touch out.txt
+rm -rf ../Results/out.txt
+touch ../Results/out.txt
 
 g++ -std=c++14 -O3 solve.cpp -o solve
 
@@ -12,7 +12,7 @@ for i in {1..54}
 do
     for j in {0..4}
     do
-        command="./solve input/g${i}.rud ${type[$j]} >> out.txt"
+        command="./solve ../input/g${i}.rud ${type[$j]} >> ../Results/out.txt"
         echo $command
 
         if [ -z "$grand_command" ]
@@ -26,3 +26,4 @@ done
 
 echo $grand_command
 eval $grand_command
+rm solve

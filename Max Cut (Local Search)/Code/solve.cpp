@@ -47,7 +47,8 @@ struct Edge
 
 struct Cut
 {
-    std::set<int> x, y; // x and y are the two disjoint sets of vertices in the cut, such that x U y = V
+    std::set<int> x, y; // x and y are the two disjoint sets of vertices in the
+                        // cut, such that x U y = V
 
     long long cut_value(const std::vector<std::vector<long long>> &adj_matrix)
     {
@@ -114,9 +115,10 @@ Edge best_edge = {-1, -1, -INF}, worst_edge = {-1, -1, INF};
 
 std::pair<long long, long long> calculate_contribution(int v, const std::set<int> &x, const std::set<int> &y)
 {
-    // cut_value(v) = sum of weights of edges between v and vertices in the other set
-    // cut_x will denote the incremental contribution to the cut weight resulting from adding v to set X
-    // cut_y will denote the incremental contribution to the cut weight resulting from adding v to set Y
+    // cut_value(v) = sum of weights of edges between v and vertices in the other
+    // set cut_x will denote the incremental contribution to the cut weight
+    // resulting from adding v to set X cut_y will denote the incremental
+    // contribution to the cut weight resulting from adding v to set Y
     long long cut_x = 0, cut_y = 0;
     for (int node : y)
         cut_x += adj_matrix[v][node];
@@ -190,8 +192,10 @@ Cut semi_greedy_maxcut()
 
     while (ret.x.size() + ret.y.size() < n_vertices)
     {
-        long long min_x = INF, min_y = INF;   // minimum contribution to cut weight by adding a vertex to X or Y
-        long long max_x = -INF, max_y = -INF; // maximum contribution to cut weight by adding a vertex to X or Y
+        long long min_x = INF, min_y = INF;   // minimum contribution to cut weight
+                                              // by adding a vertex to X or Y
+        long long max_x = -INF, max_y = -INF; // maximum contribution to cut weight
+                                              // by adding a vertex to X or Y
         std::vector<std::pair<long long, long long>> cut_values(n_vertices +
                                                                 1); // cut_values[i] = {cut_x, cut_y} for vertex i
 
@@ -268,29 +272,91 @@ Cut another_maxcut()
         // so e is our chosen edge
 
         std::pair<int, int> p = {e.u, e.v};
-        u_present = 0, v_present = 0; // 0 means not present in any set, 1 means present in X, 2 means present in Y
+        u_present = 0, v_present = 0; // 0 means not present in any set, 1 means
+                                      // present in X, 2 means present in Y
 
         u_present = 1 * ret.x.count(e.u) + 2 * ret.y.count(e.u);
         v_present = 1 * ret.x.count(e.v) + 2 * ret.y.count(e.v);
+
+        if (u_present && v_present)
+            continue; // both u and v are already present in X or Y, do nothing
+
+        std::pair<long long, int> contribution_u = calculate_contribution(e.u, ret.x, ret.y);
+        std::pair<long long, int> contribution_v = calculate_contribution(e.v, ret.x, ret.y);
+
+        std::vector<std::pair<long long, int>> contributions(4);
+        contributions[0] = {contribution_u.first + contribution_v.first, 0};        // both X
+        contributions[1] = {contribution_u.second + contribution_v.second, 1};      // both Y
+        contributions[2] = {contribution_u.first + contribution_v.second + e.w, 2}; // u in X, v in Y
+        contributions[3] = {contribution_u.second + contribution_v.first + e.w, 3}; // v in X, u in Y
 
         if (u_present == v_present)
         {
             if (u_present == 0)
             {
                 // neither u nor v has been added to X or Y yet
-                if (rand() % 2 == 1)
-                    std::swap(p.first, p.second);
-                ret.x.insert(p.first);
-                ret.y.insert(p.second);
+                std::sort(contributions.rbegin(), contributions.rend());
+                switch (contributions.front().second)
+                {
+                case 0:
+                    ret.x.insert(e.u);
+                    ret.x.insert(e.v);
+                    break;
+                case 1:
+                    ret.y.insert(e.u);
+                    ret.y.insert(e.v);
+                    break;
+                case 2:
+                    ret.x.insert(e.u);
+                    ret.y.insert(e.v);
+                    break;
+                case 3:
+                    ret.y.insert(e.u);
+                    ret.x.insert(e.v);
+                    break;
+                }
             }
             // otherwise both are present in the same set, do nothing
         }
-        else
+        else if (v_present == 0)
         {
-            if (u_present == 2 || v_present == 1)
-                std::swap(p.first, p.second);
-            ret.x.insert(p.first);
-            ret.y.insert(p.second);
+            // u already present in X or Y
+            if (u_present == 1) // u present in X
+            {
+                contributions[1].first = contributions[3].first = -INF; // impossible for u to be in Y any more
+                contributions[2].first += e.w; // u already in X, if v added to Y, then edge weight can be added
+            }
+            else // u present in Y
+            {
+                contributions[0].first = contributions[2].first = -INF; // impossible for u to be in X any more
+                contributions[3].first += e.w; // u already in Y, if v added to X, then edge weight can be added
+            }
+
+            std::sort(contributions.rbegin(), contributions.rend());
+            if (contributions.front().second == 0 || contributions.front().second == 3)
+                ret.x.insert(e.v);
+            else
+                ret.y.insert(e.v);
+        }
+        else if (u_present == 0)
+        {
+            // v already present in X or Y
+            if (v_present == 1) // v present in X
+            {
+                contributions[1].first = contributions[2].first = -INF; // impossible for v to be in Y any more
+                contributions[3].first += e.w; // v already in X, if u added to Y, then edge weight can be added
+            }
+            else // v present in Y
+            {
+                contributions[0].first = contributions[3].first = -INF; // impossible for v to be in X any more
+                contributions[2].first += e.w; // v already in Y, if u added to X, then edge weight can be added
+            }
+
+            std::sort(contributions.rbegin(), contributions.rend());
+            if (contributions.front().second == 0 || contributions.front().second == 2)
+                ret.x.insert(e.u);
+            else
+                ret.y.insert(e.u);
         }
     }
     return ret;
@@ -396,6 +462,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    input_file = input_file.substr(3, input_file.size() - 3); // remove initial ../
     in >> n_vertices >> n_edges;
 
     Result res(input_file, n_vertices, n_edges);
