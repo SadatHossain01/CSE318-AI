@@ -1,0 +1,155 @@
+enum class BUYING_PRICE
+{
+    VERY_HIGH,
+    HIGH,
+    MEDIUM,
+    LOW
+};
+
+enum class MAINTENANCE_PRICE
+{
+    VERY_HIGH,
+    HIGH,
+    MEDIUM,
+    LOW
+};
+
+enum class DOOR
+{
+    TWO,
+    THREE,
+    FOUR,
+    FIVE,
+    MORE
+};
+
+enum class PERSON
+{
+    TWO,
+    FOUR,
+    MORE
+};
+
+enum class LUGGAGE_BOOT
+{
+    SMALL,
+    MEDIUM,
+    BIG
+};
+
+enum class SAFETY
+{
+    LOW,
+    MEDIUM,
+    HIGH
+};
+
+enum class CLASS
+{
+    UNACC,
+    ACC,
+    GOOD,
+    VGOOD
+};
+
+BUYING_PRICE string_to_BP(const std::string &str);
+MAINTENANCE_PRICE string_to_MP(const std::string &str);
+DOOR string_to_D(const std::string &str);
+PERSON string_to_P(const std::string &str);
+LUGGAGE_BOOT string_to_LB(const std::string &str);
+SAFETY string_to_S(const std::string &str);
+CLASS string_to_C(const std::string &str);
+
+BUYING_PRICE string_to_BP(const std::string &str)
+{
+    if (str == "vhigh")
+        return BUYING_PRICE::VERY_HIGH;
+    else if (str == "high")
+        return BUYING_PRICE::HIGH;
+    else if (str == "med")
+        return BUYING_PRICE::MEDIUM;
+    else if (str == "low")
+        return BUYING_PRICE::LOW;
+    else
+        assert(false);
+}
+
+MAINTENANCE_PRICE string_to_MP(const std::string &str)
+{
+    if (str == "vhigh")
+        return MAINTENANCE_PRICE::VERY_HIGH;
+    else if (str == "high")
+        return MAINTENANCE_PRICE::HIGH;
+    else if (str == "med")
+        return MAINTENANCE_PRICE::MEDIUM;
+    else if (str == "low")
+        return MAINTENANCE_PRICE::LOW;
+    else
+        assert(false);
+}
+
+DOOR string_to_D(const std::string &str)
+{
+    if (str == "2")
+        return DOOR::TWO;
+    else if (str == "3")
+        return DOOR::THREE;
+    else if (str == "4")
+        return DOOR::FOUR;
+    else if (str == "5more")
+        return DOOR::FIVE;
+    else if (str == "more")
+        return DOOR::MORE;
+    else
+        assert(false);
+}
+
+PERSON string_to_P(const std::string &str)
+{
+    if (str == "2")
+        return PERSON::TWO;
+    else if (str == "4")
+        return PERSON::FOUR;
+    else if (str == "more")
+        return PERSON::MORE;
+    else
+        assert(false);
+}
+
+LUGGAGE_BOOT string_to_LB(const std::string &str)
+{
+    if (str == "small")
+        return LUGGAGE_BOOT::SMALL;
+    else if (str == "med")
+        return LUGGAGE_BOOT::MEDIUM;
+    else if (str == "big")
+        return LUGGAGE_BOOT::BIG;
+    else
+        assert(false);
+}
+
+SAFETY string_to_S(const std::string &str)
+{
+    if (str == "low")
+        return SAFETY::LOW;
+    else if (str == "med")
+        return SAFETY::MEDIUM;
+    else if (str == "high")
+        return SAFETY::HIGH;
+    else
+        assert(false);
+}
+
+CLASS string_to_C(const std::string &str)
+{
+    if (str == "unacc")
+        return CLASS::UNACC;
+    else if (str == "acc")
+        return CLASS::ACC;
+    else if (str == "good")
+        return CLASS::GOOD;
+    else if (str == "vgood")
+        return CLASS::VGOOD;
+    else
+        assert(false);
+}
